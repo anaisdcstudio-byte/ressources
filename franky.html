@@ -57,11 +57,18 @@
 #fk .sign small{display:block;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--gris)}
 #fk :focus-visible{outline:3px solid var(--vert);outline-offset:3px}
 @media (min-width:600px){#fk .wrap{padding:44px 24px 34px}#fk .ba{grid-template-columns:1fr 1fr}}
-#fk .kit{display:flex;gap:14px;align-items:center;margin:28px 0 0;padding:14px;border:1px solid var(--bord);border-radius:12px;background:#fff;text-decoration:none;color:var(--texte)}
-#fk .kit img{width:84px;height:84px;object-fit:cover;object-position:50% 40%;border-radius:8px;flex:none;background:#F4ECDF}
-#fk .kit b{font-variant-numeric:lining-nums;display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;line-height:1.1;color:var(--vert)}
-#fk .kit span{display:block;font-size:14.5px;line-height:1.35;color:var(--gris);margin-top:3px}
-#fk .kit em{font-style:normal;font-weight:700;color:var(--orange);font-size:14.5px}
+#fk .kit{display:grid;grid-template-columns:1fr;margin:34px 0 0;border-radius:14px;overflow:hidden;background:var(--vert);color:var(--creme)}
+#fk .kit-img{aspect-ratio:4/3;background:#F4ECDF;overflow:hidden}
+#fk .kit-img img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 55%}
+#fk .kit-txt{padding:20px 18px 22px}
+#fk .kit-lab{margin:0 0 6px!important;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#F0CF9A}
+#fk .kit h2{margin:0 0 10px;font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;line-height:1.1;color:var(--creme);font-variant-numeric:lining-nums}
+#fk .kit p{color:var(--creme);font-size:16px;margin:0 0 12px}
+#fk .kit ul{margin:0 0 16px;padding:0;list-style:none}
+#fk .kit li{position:relative;padding-left:24px;margin:0 0 6px;font-size:15.5px;line-height:1.4}
+#fk .kit li::before{content:'✓';position:absolute;left:0;color:var(--or);font-weight:700}
+#fk .kit .btn{background:var(--or);color:var(--vert-f);text-decoration:none;text-align:center;line-height:1.3}
+@media (min-width:600px){#fk .kit{grid-template-columns:1fr 1fr;align-items:stretch}#fk .kit-img{aspect-ratio:auto;min-height:100%}}
 </style>
 
 <div id="fk"><div class="wrap">
@@ -144,10 +151,16 @@ Le but n'est pas de raconter une histoire extraordinaire. C'est de rendre un con
   <p>Et pas besoin d'avoir vécu une série Netflix pour avoir quelque chose à raconter. 😂</p>
  </section>
 
- <a class="kit" href="https://www.chez-ladaronne.com/kit-contenu">
-  <img src="https://d1yei2z3i6k35z.cloudfront.net/18198227/6ad1d38b63f8f5.59060179_reseaux-carre-maquettes.png" alt="Le Kit contenu" loading="lazy">
-  <div><b>Et pour tes 30 prochains jours ?</b><span>Le Kit contenu : ton calendrier, ta fiche marque, des posts qui sonnent comme toi.</span><em>Je découvre le kit →</em></div>
- </a>
+ <section class="kit" aria-labelledby="fk-kit">
+  <div class="kit-img"><img src="https://d1yei2z3i6k35z.cloudfront.net/18198227/6ad1d38b63f8f5.59060179_reseaux-carre-maquettes.png" alt="Le Kit contenu : ton calendrier de 30 jours, ta fiche marque et ton assistant sur téléphone" loading="lazy"></div>
+  <div class="kit-txt">
+   <p class="kit-lab">Et après ce post&nbsp;?</p>
+   <h2 id="fk-kit">Tes 30 prochains jours, réglés en une soirée.</h2>
+   <p>FRANKY réveille un post. Le Kit contenu, lui, t'évite le « je sais pas quoi poster » tout le mois.</p>
+   <ul><li>Ton sujet, ton format et ton accroche, jour par jour.</li><li>Des idées tirées de TON métier et de TES clientes.</li><li>Ta fiche marque, pour que chaque post sonne comme toi.</li></ul>
+   <a class="btn" href="https://www.chez-ladaronne.com/kit-contenu">Je veux mes 30 jours de contenu →</a>
+  </div>
+ </section>
 
  <p class="sign">À très vite 🌸<br>Anaïs | La Daronne<small>@chez.ladaronne</small></p>
 </div></div>
