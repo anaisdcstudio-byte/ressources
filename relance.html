@@ -126,5 +126,20 @@ Règles :
 </script>
 
 <script data-goatcounter="https://ladaronne.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<script>
+(function(){
+ function ev(n){try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:n,title:n,event:true});}catch(e){}}
+ var p=(location.pathname.split('/').pop()||'index').replace('.html','');
+ document.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('button');
+  if(b&&/copi/i.test(b.textContent))ev(p+'-copie-prompt');
+  var a=e.target.closest&&e.target.closest('a[href]');
+  if(a){var h=a.getAttribute('href')||'';
+   if(/kit-contenu/.test(h))ev(p+'-clic-kit-contenu');
+   else if(/kit-business/.test(h))ev(p+'-clic-kit-business');
+   else if(/^https?:/.test(h))ev(p+'-clic-'+h.replace(/^https?:\/\/(www\.)?/,'').split(/[\/?#]/)[0]);}
+ },true);
+})();
+</script>
 </body>
 </html>
