@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
 <title>L'affaire de la cliente disparue · Chez La Daronne</title>
-<meta name="description" content="Une cliente prête à acheter a disparu. Mène l'enquête avec la commissaire Daronne. Un mini-jeu de 5 à 7 minutes.">
+<meta name="description" content="Une cliente prête à acheter a disparu. Mène l'enquête avec la commissaire Daronne. Un mini-jeu d'environ 10 minutes.">
 <meta name="theme-color" content="#0d2326">
 <meta property="og:title" content="L'affaire de la cliente disparue">
 <meta property="og:description" content="Une cliente prête à acheter a disparu. Sauras-tu trouver le coupable ?">
@@ -197,9 +197,16 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 /* ---------- Lieux ---------- */
 .lieu-head .kicker{display:flex;gap:10px;align-items:center}
 .intro-line{min-height:3.2em;margin:8px 0 16px;color:rgba(255,247,234,.9);font-size:14.5px}
-.spot{position:relative;border-radius:12px;animation:pulse 2.4s infinite}
-.spot.seen{animation:none}
-.spot.obj{animation:none}
+.spot{position:relative;border-radius:12px}
+/* Halo doré : tout élément à toucher non encore vu clignote doucement */
+@keyframes halo{0%,100%{box-shadow:0 0 0 1px rgba(201,169,110,.45),0 0 0 0 rgba(201,169,110,0)}50%{box-shadow:0 0 0 2px rgba(220,190,130,.95),0 0 18px 5px rgba(201,169,110,.45)}}
+@keyframes haloIn{0%,100%{box-shadow:inset 0 0 0 1px rgba(201,169,110,.45)}50%{box-shadow:inset 0 0 0 2px rgba(201,169,110,.95),inset 0 0 18px rgba(201,169,110,.35)}}
+@keyframes haloObj{0%,100%{filter:drop-shadow(0 0 0 rgba(220,190,130,0))}50%{filter:drop-shadow(0 0 7px rgba(220,190,130,.95))}}
+.spot:not(.seen){animation:halo 2.2s ease-in-out infinite}
+.spot.inset:not(.seen){animation-name:haloIn}
+.spot.obj:not(.seen){animation:none}
+.spot.obj:not(.seen) > svg,.spot.obj:not(.seen) > .drawer-face{animation:haloObj 2.2s ease-in-out infinite}
+.qbtn:not([disabled]){animation:halo 2.2s ease-in-out infinite}
 .spot.obj:not(.seen)::after{content:"";position:absolute;top:4%;right:6%;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle,#fff3d6 0%,#DCA04E 45%,rgba(220,160,78,0) 72%);animation:glint 1.8s ease-in-out infinite;pointer-events:none}
 .lfoot{margin-top:20px}
 .lfoot .wait{font-size:13px;color:rgba(255,247,234,.6);text-align:center;margin:0 0 12px;font-family:var(--typo)}
@@ -236,6 +243,10 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 .sv-hero .k{font:500 10px var(--sans);letter-spacing:.24em;text-transform:uppercase;color:#6b8a82}
 .sv-hero h3{font-family:var(--serif);font-size:54px;font-weight:600;margin:4px 0 6px;color:#24403c;letter-spacing:.02em}
 .sv-hero p{margin:0;font-size:14px;color:#4b5755}
+.sv-hero .sv-hook{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.2;color:#24403c;margin:4px 6px 10px}
+.sv-hero .sv-promise{font-weight:500;color:#2f5b54}
+.sv-list li .sv-li{width:auto;height:auto;border-radius:0;display:block;background:none;color:inherit;font:inherit;place-items:initial;flex:1}
+.sv-list li .sv-li b{color:#24403c;font-weight:600}
 .sv-wave{height:34px;margin:16px auto 0;width:70%;background:radial-gradient(ellipse 50% 100% at 50% 100%,transparent 60%,rgba(107,138,130,.4) 61%,transparent 66%) 0 0/34px 34px repeat-x;opacity:.7}
 .sv-sec{padding:18px 20px;border-top:1px solid #efe6d6}
 .sv-sec h4{font-family:var(--serif);font-size:21px;margin:0 0 10px;color:#24403c}
@@ -254,6 +265,8 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 .fiche .ftab b{font-family:var(--serif);font-size:20px;font-weight:600}
 .fiche .fbody{display:none;padding:0 18px 18px;font-family:var(--typo);font-size:14.5px;line-height:1.7;border-top:1px dashed rgba(38,48,47,.3)}
 .fiche.open .fbody{display:block;animation:fadeIn .5s both}
+.fiche .tap{display:block;margin-top:6px;font-family:var(--typo);font-size:12.5px;color:#00525B;letter-spacing:.04em}
+.fiche.open .tap{display:none}
 .fiche .redact{display:inline-block;background:#26302f;color:transparent;border-radius:2px;line-height:1.1}
 .fiche mark{background:linear-gradient(180deg,transparent 55%,rgba(201,169,110,.55) 55%);color:inherit;padding:0 2px}
 
@@ -304,17 +317,6 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 /* Caisse */
 .counter{position:relative;padding:26px 16px 30px;border-radius:16px;background:linear-gradient(180deg,#2a1e15,#1b130d);border:1px solid rgba(201,169,110,.25);box-shadow:inset 0 2px 30px rgba(0,0,0,.5)}
 .counter::before{content:"";position:absolute;inset:0;border-radius:16px;background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(220,160,78,.16),transparent 70%);pointer-events:none}
-.ticket{position:relative;display:block;width:84%;margin:0 auto;padding:24px 18px 26px;background:#fbf8f1;color:#262626;font-family:var(--typo);font-size:14px;line-height:1.65;text-align:left;border:0;transform:rotate(1.4deg);
-  -webkit-mask:radial-gradient(circle 6px at 50% 0,transparent 97%,#000) top/14px 51% repeat-x,radial-gradient(circle 6px at 50% 100%,transparent 97%,#000) bottom/14px 51% repeat-x;
-  mask:radial-gradient(circle 6px at 50% 0,transparent 97%,#000) top/14px 51% repeat-x,radial-gradient(circle 6px at 50% 100%,transparent 97%,#000) bottom/14px 51% repeat-x;
-  filter:drop-shadow(0 10px 16px rgba(0,0,0,.5));border-radius:0;animation:none}
-.ticket-wrap{border-radius:6px;animation:pulse 2.4s infinite;width:84%;margin:0 auto}
-.ticket-wrap.seen{animation:none}
-.ticket-wrap .ticket{width:100%}
-.ticket .tc{text-align:center}
-.ticket hr{border:0;border-top:1px dashed #999;margin:10px 0}
-.ticket .row{display:flex;justify-content:space-between;gap:10px}
-.ticket .ab{display:block;margin-top:8px;text-align:center;font-size:14px;letter-spacing:.02em;white-space:nowrap}
 .terminal{display:flex;align-items:center;gap:12px;margin:22px auto 0;width:84%;padding:12px;border-radius:12px;background:#121b1c;border:1px solid rgba(201,169,110,.25);color:var(--ivoire);text-align:left}
 .terminal .scr{flex:none;width:64px;height:40px;border-radius:6px;background:#0a2f33;display:grid;place-items:center;font:400 10px var(--typo);color:#9fd0c9}
 .terminal span{font-size:12.5px;color:rgba(255,247,234,.75)}
@@ -324,6 +326,15 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 .door{display:block;margin:0 auto;width:210px;max-width:70%;border:0;background:none;padding:0;border-radius:8px}
 .door svg{display:block;width:100%;height:auto}
 .vault .sign{margin:16px auto 0;font-family:var(--typo);font-size:14px;color:rgba(255,247,234,.8)}
+
+/* Journal du compte */
+.journal{display:block;width:100%;margin-top:16px;padding:16px 18px;text-align:left;border:0;--rot:.5deg;transform:rotate(.5deg);font-family:var(--typo);color:var(--encre)}
+.journal .jt{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.journal .jt b{font-family:var(--serif);font-size:20px;font-weight:600}
+.journal .jt span{font-size:12.5px;color:#5f665e}
+.journal .tap{display:block;margin-top:6px;font-size:12.5px;color:#00525B;letter-spacing:.04em}
+.journal .jl{display:block;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(38,48,47,.3);font-size:14px;line-height:1.7}
+.journal mark{background:linear-gradient(180deg,transparent 55%,rgba(201,169,110,.55) 55%);color:inherit;padding:0 2px}
 
 /* Bureau */
 .desk{position:relative;width:100%;aspect-ratio:39/46;border-radius:16px;overflow:hidden;border:1px solid rgba(201,169,110,.25);box-shadow:0 20px 44px rgba(0,0,0,.5);
@@ -381,7 +392,8 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 .clues-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px;margin-top:30px;position:relative;z-index:2}
 .ccard{position:relative;display:block;width:100%;padding:14px 10px 10px;text-align:left;border:0;transform:rotate(var(--r,0deg));transition:transform .2s, box-shadow .2s}
 .ccard .n{font:400 10px var(--typo);color:#6b6f66}
-.ccard b{display:block;font-family:var(--serif);font-size:15px;line-height:1.15;margin-top:2px;color:#1d2a2b}
+.ccard b{display:block;font-family:var(--serif);font-size:15.5px;line-height:1.15;margin-top:2px;color:#1d2a2b}
+.ccard .rc{display:block;margin-top:5px;font:400 11.5px/1.4 var(--typo);color:#4a524f}
 .ccard.sel{transform:rotate(0) translateY(-3px) scale(1.03);box-shadow:0 0 0 2px #00525B,0 14px 26px rgba(0,0,0,.5)}
 .ccard.linked::before{content:"";position:absolute;right:8px;bottom:8px;width:8px;height:8px;border-radius:50%;background:#00525B}
 .boardmsg{min-height:3.4em;margin:12px 0 0;padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.25);font-family:var(--typo);font-size:14px;line-height:1.5}
@@ -399,6 +411,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 .accp.on{border-color:var(--or);background:rgba(201,169,110,.14)}
 .accp.on .box{background:var(--or)}
 .accp b{display:block;font-family:var(--serif);font-size:17px;line-height:1.15}
+.accp .rc{display:block;margin-top:3px;font:400 12.5px/1.45 var(--typo);color:rgba(255,247,234,.72)}
 .accp small{font:400 11px var(--typo);color:rgba(255,247,234,.55)}
 .stickybar{position:sticky;bottom:0;z-index:5;margin:16px -16px -28px;padding:14px 16px calc(16px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(13,35,38,0),#0d2326 30%)}
 .sec-title{display:flex;justify-content:space-between;align-items:baseline;margin:22px 0 10px}
@@ -455,6 +468,9 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
   .caret{display:none}
+  .spot:not(.seen),.qbtn:not([disabled]){box-shadow:0 0 0 2px rgba(201,169,110,.9) !important}
+  .spot.inset:not(.seen){box-shadow:inset 0 0 0 2px rgba(201,169,110,.9) !important}
+  .spot.obj:not(.seen){box-shadow:none !important;outline:2px solid rgba(201,169,110,.9);outline-offset:2px}
 }
 </style>
 </head>
@@ -491,6 +507,7 @@ function fr(t){
     .replace(/« /g, '« ')
     .replace(/ ([»?!:;])/g, ' $1')
     .replace(/(\d) h (\d)/g, '$1 h $2')
+    .replace(/ sur (\d)/g, '\u00a0sur\u00a0$1')
     .replace(/(\d) (€|min\b|s\b|champs|étapes|séances|sur\b|minute)/g, '$1 $2');
 }
 function setHTML(el, html){ el.innerHTML = fr(html); }
@@ -514,6 +531,17 @@ function wipe(){
 }
 let S = fresh();
 (function(){ const saved = load(); if (saved && typeof saved === 'object') S = Object.assign(fresh(), saved); })();
+// Migration : l'ancienne version avait un lieu « La caisse » et un indice « ticket »
+function migrate(){
+  try {
+    if (!Array.isArray(S.clues)) S.clues = [];
+    S.clues = S.clues.filter(k => k !== 'ticket');
+    if (S.links && typeof S.links === 'object') delete S.links.ticket; else S.links = {};
+    if (S.done) delete S.done.caisse;
+    if (typeof S.screen !== 'string' || S.screen === 'lieu:caisse') S.screen = S.startTime ? 'carte' : 'intro';
+  } catch (e) { S = fresh(); }
+}
+migrate();
 
 // Chronomètre : ne compte que le temps de jeu réel (onglet visible)
 let lastTick = Date.now(), tickN = 0;
@@ -537,10 +565,8 @@ const LIEUX = [
     intro:"14 h 35, Violette clique sur « Je réserve ». Et elle atterrit… ici. Inspire, expire. C’est le nom de l’offre, après tout." },
   { id:'mail',   n:4, time:'14 h 36', name:'La boîte mail de Violette', sub:'Une pièce apportée par sa sœur', icon:'mail',
     intro:"Sa sœur est passée au commissariat avec le téléphone de Violette. Témoin précieux, code de déverrouillage désastreux." },
-  { id:'caisse', n:5, time:'14 h 37', name:'La caisse', sub:'Là où l’argent aurait dû changer de mains', icon:'ticket',
-    intro:"Normalement, ici, ça sonne et tout le monde est content. Il reste quelque chose sur le comptoir." },
-  { id:'membre', n:6, time:'14 h ??', name:'L’espace membre', sub:'La destination finale', icon:'door',
-    intro:"Margaux avait tout préparé : la vidéo de bienvenue, l’audio de relaxation, le petit mot doux." }
+  { id:'membre', n:5, time:'14 h 37', name:'L’espace membre', sub:'La destination finale. Et son journal', icon:'door',
+    intro:"Margaux avait tout préparé : la vidéo de bienvenue, l’audio de relaxation, le petit mot doux. Touche la porte, puis lis le journal du compte." }
 ];
 
 const SUSPECTS = [
@@ -555,9 +581,9 @@ const SUSPECTS = [
     desc:"Contours incertains, discours vaporeux. Même sa silhouette n’est pas très claire.",
     qa:[
       { q:"L’offre de Margaux était-elle claire ?",
-        a:"D’habitude, je fais écrire des choses comme « accompagnement holistique vers ton alignement profond ». Là ? « 3 séances pour retrouver le sommeil. » C’était d’une clarté insultante. Je n’ai rien pu faire." },
+        a:"D’habitude, je fais écrire « accompagnement holistique vers ton alignement profond », et plus personne ne sait ce qu’il achète. Là ? « Tu te réveilles à 3 h ? En 3 séances, tu retrouves des nuits qui reposent vraiment. 149 €. » La douleur, le résultat, le prix. Une clarté insultante. Je n’ai rien pu faire." },
       { q:"Violette avait-elle compris ce qu’elle achetait ?",
-        a:"Quand je passe quelque part, on reçoit des « euh, c’est quoi exactement ? ». Elle, elle savait ce qu’elle voulait. Relisez donc ses messages, au lieu de m’embêter." } ] },
+        a:"Évidemment. Elle a lu « tu te réveilles à 3 h » et elle s’est reconnue. Quand je passe quelque part, on reçoit des « euh, c’est quoi exactement ? ». Elle a écrit « c’est exactement ce qu’il me faut ». Relisez ses messages, au lieu de m’embêter." } ] },
   { id:'tard', name:'Madame Réponse-Tardive', role:'Le message sans réponse', short:'Réponse-Tardive',
     desc:"Montre à gousset, sablier dans le sac. Elle arrive toujours après la bataille.",
     qa:[
@@ -570,33 +596,33 @@ const SUSPECTS = [
     qa:[
       { q:"Que faisiez-vous sur le chemin de Violette ?",
         a:"Moi ? Je ne fais que guider les gens… Une petite question par-ci, une petite étape par-là. C’est pour leur bien. On ne va quand même pas acheter n’importe comment." },
-      { q:"Combien d’étapes entre le clic et le paiement ?",
+      { q:"Combien d’étapes entre le clic « Je réserve » et l’espace membre ?",
         a:"Le juste nombre. Je n’ai jamais compté : compter, c’est fatigant. Vous avez d’autres questions ? Non ? Parfait. J’ai un rendez-vous. Enfin, un rendez-vous en plusieurs étapes." } ] }
 ];
 const SUS = Object.fromEntries(SUSPECTS.map(s => [s.id, s]));
 
 // Indices. rel.t : alibi (innocente), charge (accuse), fausse (fausse piste), ambiance
 const CLUES = {
-  rep1min:  { lieu:'dm', title:'Une réponse en une minute', needs:['dm-heure'], rel:{ s:'tard', t:'alibi' },
+  rep1min:  { recap:"Margaux a répondu à 14 h 33, avec le lien.", lieu:'dm', title:'Une réponse en une minute', needs:['dm-heure'], rel:{ s:'tard', t:'alibi' },
     text:"14 h 32 : Violette demande comment réserver. 14 h 33 : Margaux répond avec le lien. Une minute chrono. Personne n’a laissé Violette attendre." },
-  coeur:    { lieu:'dm', title:'« C’est exactement ce qu’il me faut 😍 »', needs:['dm-coeur'], rel:{ s:'flou', t:'alibi' },
+  coeur:    { recap:"Violette a écrit que l’offre était exactement ce qu’il lui fallait.", lieu:'dm', title:'« C’est exactement ce qu’il me faut 😍 »', needs:['dm-coeur'], rel:{ s:'flou', t:'alibi' },
     text:"Violette a compris l’offre. Elle le dit, avec des cœurs dans les yeux. On a déjà vu plus flou." },
-  prixvu:   { lieu:'vente', title:'La fiche de surveillance', needs:['vente-fiche'], rel:{ s:'prix', t:'alibi' },
+  prixvu:   { recap:"Elle a regardé le prix 1 min 40, puis cliqué sur Je réserve.", lieu:'vente', title:'La fiche de surveillance', needs:['vente-fiche'], rel:{ s:'prix', t:'alibi' },
     text:"Temps passé sur le prix : 1 min 40. Puis clic sur JE RÉSERVE. Elle a vu le prix. Et elle a cliqué quand même." },
-  form:     { lieu:'resa', title:'Le formulaire monstre', needs:['resa-champs','resa-compte','resa-etape'], rel:{ s:'clic', t:'charge' }, key:true,
+  form:     { recap:"9 champs, compte obligatoire, étape 3 sur 6.", lieu:'resa', title:'Le formulaire monstre', needs:['resa-champs','resa-compte','resa-etape'], rel:{ s:'clic', t:'charge' }, key:true,
     text:"9 champs à remplir, dont la date de naissance et « Comment nous avez-vous connue ? ». Création de compte obligatoire. Et on n’en est qu’à l’étape 3 sur 6." },
-  spam:     { lieu:'mail', title:'Le mail dans les spams', needs:['mail-spam-msg'], rel:{ s:'clic', t:'charge' }, key:true,
+  spam:     { recap:"La confirmation du compte, reçue à 14 h 36.", lieu:'mail', title:'Le mail dans les spams', needs:['mail-spam-msg'], rel:{ s:'clic', t:'charge' }, key:true,
     text:"Dossier SPAMS. « Confirmez votre adresse pour créer votre compte. » Reçu à 14 h 36. Jamais ouvert. Sans ce clic, impossible d’aller plus loin." },
-  ticket:   { lieu:'caisse', title:'Le ticket de paiement abandonné', needs:['caisse-ticket'], rel:{ s:'clic', t:'charge' }, key:true,
-    text:"Panier : Respire, 149 €. Abandon à l’étape 5 sur 6. 14 h 37. Elle était à une marche de l’arrivée." },
-  porte:    { lieu:'membre', title:'La porte fermée', needs:['membre-porte'], rel:{ s:'clic', t:'ambiance' },
+  journal:  { recap:"Compte en attente de confirmation, bloqué à l’étape 4 sur 6.", lieu:'membre', title:'Le journal du compte', needs:['membre-journal'], rel:{ s:'clic', t:'charge' }, key:true,
+    text:"Compte de Violette : en attente de confirmation depuis 14 h 36. Dernière activité : 14 h 37. Réservation incomplète, bloquée à l’étape 4 sur 6 (confirmation de l’e-mail). Elle n’a jamais vu la caisse." },
+  porte:    { recap:"L’espace membre : personne n’y est jamais entré.", lieu:'membre', title:'La porte fermée', needs:['membre-porte'], rel:{ s:'clic', t:'ambiance' },
     text:"Une toile d’araignée sur la poignée. Un écriteau : « Personne n’est jamais arrivé jusqu’ici. » Brr." },
-  postit:   { lieu:'bureau', title:'Le post-it « Trop cher ?? »', needs:['bureau-postit'], rel:{ s:'prix', t:'fausse' },
+  postit:   { recap:"« Trop cher ?? », écrit par Margaux.", lieu:'bureau', title:'Le post-it « Trop cher ?? »', needs:['bureau-postit'], rel:{ s:'prix', t:'fausse' },
     text:"Collé sur l’écran de Margaux. Écriture nerveuse, deux points d’interrogation. Ça sent l’aveu… ou la panique." },
-  brouillon:{ lieu:'bureau', title:'Le brouillon froissé', needs:['bureau-corbeille'], rel:{ s:'prix', t:'fausse' },
+  brouillon:{ recap:"« Et si je baissais mon prix à 99 € ? »", lieu:'bureau', title:'Le brouillon froissé', needs:['bureau-corbeille'], rel:{ s:'prix', t:'fausse' },
     text:"Repêché dans la corbeille : « Et si je baissais mon prix à 99 € ? » Raturé trois fois. Puis réécrit. Puis froissé." }
 };
-const KEY_CLUES = ['form', 'spam', 'ticket'];
+const KEY_CLUES = ['form', 'spam', 'journal'];
 const TOTAL_CLUES = Object.keys(CLUES).length;
 
 const NOTES = {
@@ -610,7 +636,6 @@ const NOTES = {
   'resa-go':    "Étape 4 : « Confirmez votre adresse mail pour continuer. » Retiens bien ça.",
   'mail-inbox': "Une jardinerie, maman, le dentiste. Rien de Margaux dans la boîte de réception. Bizarre, non ?",
   'mail-promo': "« Vous avez gagné une croisière ! » Non. Mais merci.",
-  'caisse-term':"Le terminal de paiement attend toujours. Il a l’air vexé.",
   'bureau-ordi':"L’historique de recherche : « prix trop cher sophrologie », « comment baisser ses prix sans paniquer », « 149 € c’est indécent ? ». Margaux a une théorie. Elle s’y accroche.",
   'bureau-tiroir':"Un carnet : « Objectif : 10 clientes Respire ». Et un paquet de mouchoirs déjà bien entamé.",
   'bureau-tasse':"Tisane camomille, froide depuis mardi. Une sophrologue stressée, c’est le cordonnier mal chaussé.",
@@ -621,8 +646,8 @@ const TEASE = {
   prix: "Ah. Tu as accusé le prix, comme tout le monde… 😏 Relis la fiche de surveillance : Violette a regardé le prix 1 min 40, ET elle a cliqué sur « Je réserve ». Une cliente qui fuit le prix ne clique pas. Suis-la plutôt après le clic.",
   flou: "Monsieur Message-Flou ? Violette a écrit « C’est exactement ce qu’il me faut ». Difficile de faire plus clair 😏 Ce n’est pas l’offre qu’elle n’a pas comprise. Regarde ce qui lui est arrivé après le clic.",
   tard: "Une minute de délai, et tu accuses Madame Réponse-Tardive de lenteur ? Je te trouve sévère 😏 Margaux a répondu à 14 h 33. Le problème est plus loin sur le chemin.",
-  clicOne: "Bon suspect. Une de tes preuves tient debout, l’autre ferait rire son avocat. Il me faut deux preuves qui montrent où Violette s’est perdue entre le clic et le paiement.",
-  clicNone: "Bon suspect, mauvaises preuves. Avec ça, son avocat le fait sortir avant le goûter. Montre-moi où Violette s’est perdue, concrètement, entre le clic et le paiement."
+  clicOne: "Bon suspect. Une de tes preuves tient debout, l’autre ferait rire son avocat. Il me faut deux preuves qui montrent où Violette s’est perdue entre le clic « Je réserve » et l’espace membre.",
+  clicNone: "Bon suspect, mauvaises preuves. Avec ça, son avocat le fait sortir avant le goûter. Montre-moi où Violette s’est perdue, concrètement, entre le clic « Je réserve » et l’espace membre."
 };
 
 /* =====================================================================
@@ -633,7 +658,6 @@ const ICON = {
   page:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M7 7h10M7 10.5h7M7 14h10"/><rect x="7" y="16.5" width="6" height="2.2" rx="1"/>',
   form:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M7 7h3M7 11h3M7 15h3"/><rect x="11.5" y="6" width="5.5" height="2" rx=".5"/><rect x="11.5" y="10" width="5.5" height="2" rx=".5"/><rect x="11.5" y="14" width="5.5" height="2" rx=".5"/>',
   mail:'<rect x="3" y="5.5" width="18" height="13" rx="1.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/>',
-  ticket:'<path d="M6 2.5h12v19l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4-2 1.4z"/><path d="M9 7h6M9 10.5h6M9 14h4"/>',
   door:'<path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21"/><path d="M4 21h16"/><circle cx="15" cy="12.5" r=".9"/>',
   lamp:'<path d="M7 3h10l2.5 7h-15z"/><path d="M12 10v8M8 21h8M12 18v3"/>',
   spot:'<path d="M12 2v3"/><path d="M8.5 5h7l-1.5 4h-4z"/><path d="M10 9l-6 12h16l-6-12" opacity=".55"/>',
@@ -814,13 +838,13 @@ function allSuspectsDone(){ return SUSPECTS.every(s => suspectDone(s.id)); }
 function accusationMissing(){
   const m = [];
   const keysOk = KEY_CLUES.every(k => S.clues.indexOf(k) > -1);
-  if (!keysOk) m.push('suivre Violette jusqu’à la caisse');
+  if (!keysOk) m.push('suivre Violette jusqu’à l’espace membre');
   if (!allSuspectsDone()) m.push('interroger les 4 suspects');
   return m;
 }
 function updateDone(){
-  LIEUX.forEach(l => { if (lieuDone(l.id)) S.done[l.id] = true; });
-  if (lieuDone('bureau')) S.done.bureau = true;
+  LIEUX.forEach(l => { S.done[l.id] = lieuDone(l.id); });
+  S.done.bureau = lieuDone('bureau');
 }
 function isInnocent(sid){ return Object.keys(S.links).some(k => S.links[k] === sid && CLUES[k].rel.t === 'alibi' && CLUES[k].rel.s === sid); }
 function chargesOn(sid){ return Object.keys(S.links).filter(k => S.links[k] === sid && CLUES[k].rel.s === sid && CLUES[k].rel.t === 'charge').length; }
@@ -850,8 +874,7 @@ function hintText(){
   if (!S.done.vente) return "Violette est allée sur la page de vente. Va voir ce qu’elle a vu.";
   if (!S.done.resa) return "Elle a cliqué sur « Je réserve ». Le prix ne lui a donc pas fait peur… Alors, qu’est-ce qui s’est passé après ?";
   if (!S.done.mail) return "Sa sœur nous a apporté son téléphone. Fouille sa boîte mail. Partout. Même là où personne ne regarde.";
-  if (!S.done.caisse) return "Le chemin continue jusqu’à la caisse. Va voir ce qu’il reste sur le comptoir.";
-  if (!S.done.membre) return "Dernier lieu : l’espace membre. Là où Violette aurait dû arriver.";
+  if (!S.done.membre) return "Dernier lieu : l’espace membre. Là où Violette aurait dû arriver. Son compte a laissé un journal. Lis-le.";
   if (!allSuspectsDone()) return "Les suspects attendent en salle d’interrogatoire. Ils adorent parler d’eux. Laisse-les faire.";
   if (!Object.keys(S.links).length) return "Tu as tout ce qu’il faut. Le tableau en liège peut t’aider à innocenter du monde. Puis, accuse.";
   return "Tu as tout ce qu’il faut. Direction l’accusation, preuves en main. Et pas de tremblement dans la voix.";
@@ -911,7 +934,7 @@ function scrIntro(){
       <p class="sub">Une cliente prête à acheter s’est volatilisée entre un message et un paiement. La commissaire Daronne a besoin de ton flair.</p>
     </div>
     <div class="intro-meta">
-      <span class="chip">${icon('loupe', 14)} Une enquête de 5 à 7 min</span>
+      <span class="chip">${icon('loupe', 14)} Une enquête d’environ 10 min</span>
       <span class="chip">4 suspects</span>
       <span class="chip">6 lieux</span>
     </div>
@@ -1002,7 +1025,7 @@ function scrCarte(){
 function lieuShell(l, body){
   return `
     <div class="topbar"><button class="back" type="button" data-act="go" data-arg="carte">${icon('back', 16)} Carte</button><span class="chip">${l.time}</span></div>
-    <div class="lieu-head"><p class="kicker">Lieu ${l.n} sur 6</p><h1 class="h2">${l.name}</h1></div>
+    <div class="lieu-head"><p class="kicker">Lieu ${l.n} sur ${LIEUX.length}</p><h1 class="h2">${l.name}</h1></div>
     <p class="intro-line typo" id="introline"></p>
     ${body}
     <div class="lfoot" id="lfoot"></div>`;
@@ -1043,10 +1066,10 @@ function scrLieu(id, seq){
       <div class="dmhead"><span class="av">V</span><div><b>violette.respirelavie</b><small>Active il y a 2 j</small></div></div>
       <div class="thread">
         <span class="day">MARDI</span>
-        <button class="msg in ${spotCls('dm-hello')}" type="button" data-act="spot" data-arg="dm-hello" data-spot="dm-hello" style="animation:none">Coucou ! Comment je fais pour réserver ?<span class="ts">14 h 32</span></button>
+        <button class="msg in ${spotCls('dm-hello')}" type="button" data-act="spot" data-arg="dm-hello" data-spot="dm-hello">Coucou ! Comment je fais pour réserver ?<span class="ts">14 h 32</span></button>
         <button class="msg in ${spotCls('dm-coeur')}" type="button" data-act="spot" data-arg="dm-coeur" data-spot="dm-coeur">J’ai vu ton post sur le sommeil. C’est exactement ce qu’il me faut 😍<span class="ts">14 h 32</span></button>
         <button class="msg out ${spotCls('dm-heure')}" type="button" data-act="spot" data-arg="dm-heure" data-spot="dm-heure">Avec plaisir Violette ! Tout est ici 👇<span class="lnk">margaux-sophro.fr/respire</span><span class="ts">14 h 33</span></button>
-        <button class="msg in ${spotCls('dm-go')}" type="button" data-act="spot" data-arg="dm-go" data-spot="dm-go" style="animation:none">Super, j’y vais !<span class="ts">14 h 33</span></button>
+        <button class="msg in ${spotCls('dm-go')}" type="button" data-act="spot" data-arg="dm-go" data-spot="dm-go">Super, j’y vais !<span class="ts">14 h 33</span></button>
         <span class="seenlbl">Vu</span>
       </div>
     </div>`;
@@ -1055,21 +1078,21 @@ function scrLieu(id, seq){
       <div class="bbar"><i></i><i></i><i></i><span class="url">margaux-sophro.fr/respire</span></div>
       <div class="site" id="site">
         <div class="sv-nav"><b>Margaux</b><span>Sophrologue</span></div>
-        <div class="sv-hero"><span class="k">Programme en 3 séances</span><h3>Respire</h3><p>3 séances pour retrouver le sommeil et souffler enfin.</p><div class="sv-wave"></div></div>
-        <div class="sv-sec"><h4>Ce qu’on va faire ensemble</h4><ul class="sv-list">
-          <li><span>1</span>Comprendre ce qui t’empêche de lâcher prise le soir.</li>
-          <li><span>2</span>Apprendre 3 respirations à faire dans ton lit.</li>
-          <li><span>3</span>Repartir avec ta routine du soir, simple et à toi.</li></ul></div>
-        <div class="sv-sec"><h4>Pour qui ?</h4><p style="margin:0;font-size:13.5px;color:#3e4a48">Pour toi si tu comptes les moutons, puis les heures, puis les cernes.</p></div>
+        <div class="sv-hero"><span class="k">Programme sommeil en 3 séances</span><h3>Respire</h3><p class="sv-hook">Tu te réveilles à 3 h et ton cerveau refait toute ta journée ?</p><p class="sv-promise">En 3 séances, tu retrouves des nuits qui reposent vraiment.</p><div class="sv-wave"></div></div>
+        <div class="sv-sec"><h4>Tes 3 séances</h4><ul class="sv-list">
+          <li><span>1</span><span class="sv-li"><b>Comprendre.</b> On trouve ce qui rallume ton cerveau en pleine nuit, et pourquoi il refuse de lâcher.</span></li>
+          <li><span>2</span><span class="sv-li"><b>Couper le moulin.</b> Tu apprends 3 respirations qui calment les pensées, à faire dans ton lit, même à 3 h.</span></li>
+          <li><span>3</span><span class="sv-li"><b>T’endormir sans lutter.</b> Tu repars avec ta routine du soir, simple, à toi, pour des matins où tu te sens enfin reposée.</span></li></ul></div>
+        <div class="sv-sec"><h4>Pour qui ?</h4><p style="margin:0;font-size:13.5px;color:#3e4a48">Pour toi si tu comptes les moutons, puis les heures, puis les cernes. Et si tu en as assez de commencer tes journées déjà fatiguée.</p></div>
         <div class="sv-price ${spotCls('vente-prix')}" data-act="spot" data-arg="vente-prix" data-spot="vente-prix" role="button" tabindex="0">
           <span class="amt">149 €</span><small>les 3 séances en visio</small>
-          <button class="sv-cta" type="button" data-act="spot" data-arg="vente-cta">JE RÉSERVE</button>
+          <button class="sv-cta ${spotCls('vente-cta')}" type="button" data-act="spot" data-arg="vente-cta" data-spot="vente-cta">JE RÉSERVE</button>
         </div>
         <div class="sv-foot">Margaux · Sophrologue · Mentions légales</div>
       </div>
     </div>
     <button class="fiche paper ${S.spots['vente-fiche'] ? 'open seen' : ''} spot ${S.spots['vente-fiche'] ? 'seen' : ''}" type="button" data-act="fiche" data-spot="vente-fiche">
-      <span class="ftab"><span><b>Fiche de surveillance</b><br>Sujet : V. · Mardi</span><span>${icon('loupe', 22)}</span></span>
+      <span class="ftab"><span><b>Fiche de surveillance</b><br>Sujet : V. · Mardi<span class="tap">Toucher pour ouvrir ▾</span></span><span>${icon('loupe', 22)}</span></span>
       <span class="fbody">
         14 h 34 : arrivée sur la page.<br>
         Défilement complet : oui.<br>
@@ -1082,7 +1105,7 @@ function scrLieu(id, seq){
     body = `<div class="browser">
       <div class="bbar"><i></i><i></i><i></i><span class="url">margaux-sophro.fr/reservation/etape-3</span></div>
       <div class="site free">
-        <button class="steps ${spotCls('resa-etape')}" type="button" data-act="spot" data-arg="resa-etape" data-spot="resa-etape"><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span><b>Étape 3 sur 6</b></button>
+        <button class="steps inset ${spotCls('resa-etape')}" type="button" data-act="spot" data-arg="resa-etape" data-spot="resa-etape"><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span><b>Étape 3 sur 6</b></button>
         <div class="form">
           <h4>Vos informations</h4><p class="sub">Merci de remplir tous les champs obligatoires (*)</p>
           <button class="fields ${spotCls('resa-champs')}" type="button" data-act="spot" data-arg="resa-champs" data-spot="resa-champs">
@@ -1097,7 +1120,7 @@ function scrLieu(id, seq){
             <span class="field full"><label>Comment nous avez-vous connue ? <em>*</em></label><span class="inp sel">Choisir… <span>▾</span></span></span>
           </button>
           <button class="acct ${spotCls('resa-compte')}" type="button" data-act="spot" data-arg="resa-compte" data-spot="resa-compte"><span class="cb">✓</span><span><b>Création de compte obligatoire</b><small>Mot de passe : 12 caractères, une majuscule, un chiffre, un symbole et le nom de votre premier animal.</small></span></button>
-          <button class="sv-cta go" type="button" data-act="spot" data-arg="resa-go">CONTINUER VERS L’ÉTAPE 4</button>
+          <button class="sv-cta go ${spotCls('resa-go')}" type="button" data-act="spot" data-arg="resa-go" data-spot="resa-go">CONTINUER VERS L’ÉTAPE 4</button>
         </div>
       </div>
     </div>`;
@@ -1105,25 +1128,9 @@ function scrLieu(id, seq){
     body = `<div class="sister"><span class="av">S</span><p><small>Témoin : la sœur de Violette</small>« Elle m’a dit qu’elle n’avait jamais rien reçu, qu’elle avait laissé tomber. Tenez, son téléphone. Le code, c’est 1234. Oui, elle est comme ça. »</p></div>
       <div class="mailapp">
         <div class="mtop">Courrier</div>
-        <div class="mtabs"><button class="mtab on" type="button" data-act="mailtab" data-arg="inbox">Réception (3)</button><button class="mtab" type="button" data-act="mailtab" data-arg="spam">Spams (2)</button></div>
+        <div class="mtabs"><button class="mtab on" type="button" data-act="mailtab" data-arg="inbox">Réception (3)</button><button class="mtab ${S.spots['mail-tab-spam'] ? '' : 'spot'}" type="button" data-act="mailtab" data-arg="spam" data-spot="mail-tab-spam">Spams (2)</button></div>
         <div id="mailbody"></div>
       </div>`;
-  } else if (id === 'caisse') {
-    body = `<div class="counter">
-      <div class="ticket-wrap ${spotCls('caisse-ticket')}" data-spot="caisse-ticket">
-      <button class="ticket" type="button" data-act="spot" data-arg="caisse-ticket">
-        <span class="tc">MARGAUX · SOPHROLOGUE<br>TICKET DE PAIEMENT</span>
-        <hr>
-        <span class="row"><span>Panier :</span><span>Respire</span></span>
-        <span class="row"><span>Montant :</span><span>149,00 €</span></span>
-        <span class="row"><span>Cliente :</span><span>Violette</span></span>
-        <span class="row"><span>Heure :</span><span>14 h 37</span></span>
-        <hr>
-        <span class="ab">ABANDON À L’ÉTAPE 5 SUR 6</span>
-        <span class="tc" style="display:block;margin-top:8px;font-size:12px;opacity:.7">Paiement non finalisé</span>
-      </button></div>
-      <button class="terminal ${spotCls('caisse-term')}" type="button" data-act="spot" data-arg="caisse-term" data-spot="caisse-term" style="animation:none"><span class="scr">EN ATTENTE</span><span>Terminal de paiement. Il attend toujours.</span></button>
-    </div>`;
   } else if (id === 'membre') {
     body = `<div class="vault">
       <button class="door ${spotCls('membre-porte')}" type="button" data-act="spot" data-arg="membre-porte" data-spot="membre-porte" aria-label="La porte de l’espace membre">
@@ -1145,7 +1152,11 @@ function scrLieu(id, seq){
         </svg>
       </button>
       <p class="sign">« Personne n’est jamais arrivé jusqu’ici. »<br><span class="muted">Touche la porte.</span></p>
-    </div>`;
+    </div>
+    <button class="journal paper ${spotCls('membre-journal')}" type="button" data-act="spot" data-arg="membre-journal" data-spot="membre-journal">
+      <span class="jt"><b>Journal du compte</b><span>Violette · Mardi</span></span>
+      ${S.spots['membre-journal'] ? `<span class="jl">14 h 35 : création du compte demandée.<br>14 h 36 : e-mail de confirmation envoyé.<br><mark>14 h 36 : en attente de confirmation.</mark><br><mark>14 h 37 : dernière activité.</mark><br>Statut : réservation bloquée à l’étape 4 sur 6.</span>` : `<span class="tap">Toucher pour lire ▾</span>`}
+    </button>`;
   }
   setHTML(screenEl, lieuShell(l, body));
   if (id === 'mail') mailTab('inbox');
@@ -1158,14 +1169,14 @@ function mailTab(t){
   const box = $('#mailbody'); if (!box) return;
   if (t === 'inbox') {
     setHTML(box, `<div class="mlist">
-      <button class="mrow" type="button" data-act="spot" data-arg="mail-inbox"><b>Jardinerie du Coin <small>13 h 02</small></b><span>-20 % sur les pots en terre cuite, ce week-end seulement</span></button>
-      <button class="mrow" type="button" data-act="spot" data-arg="mail-inbox"><b>Maman <small>11 h 47</small></b><span>Tu viens dimanche ? Ton oncle apporte son gratin</span></button>
-      <button class="mrow" type="button" data-act="spot" data-arg="mail-inbox"><b>Cabinet dentaire <small>09 h 15</small></b><span>Rappel : votre rendez-vous de jeudi</span></button>
+      <button class="mrow inset ${spotCls('mail-inbox')}" type="button" data-act="spot" data-arg="mail-inbox" data-spot="mail-inbox"><b>Jardinerie du Coin <small>13 h 02</small></b><span>-20 % sur les pots en terre cuite, ce week-end seulement</span></button>
+      <button class="mrow inset ${spotCls('mail-inbox')}" type="button" data-act="spot" data-arg="mail-inbox" data-spot="mail-inbox"><b>Maman <small>11 h 47</small></b><span>Tu viens dimanche ? Ton oncle apporte son gratin</span></button>
+      <button class="mrow inset ${spotCls('mail-inbox')}" type="button" data-act="spot" data-arg="mail-inbox" data-spot="mail-inbox"><b>Cabinet dentaire <small>09 h 15</small></b><span>Rappel : votre rendez-vous de jeudi</span></button>
     </div>`);
   } else {
     setHTML(box, `<div class="mlist">
-      <button class="mrow unread ${spotCls('mail-spam-msg')}" type="button" data-act="spot" data-arg="mail-spam-msg" data-spot="mail-spam-msg"><b>Margaux Sophrologie <small>14 h 36</small></b><span>Confirmez votre adresse pour créer votre compte</span></button>
-      <button class="mrow" type="button" data-act="spot" data-arg="mail-promo"><b>Super Gains <small>08 h 03</small></b><span>Vous avez gagné une croisière !!!</span></button>
+      <button class="mrow inset unread ${spotCls('mail-spam-msg')}" type="button" data-act="spot" data-arg="mail-spam-msg" data-spot="mail-spam-msg"><b>Margaux Sophrologie <small>14 h 36</small></b><span>Confirmez votre adresse pour créer votre compte</span></button>
+      <button class="mrow inset ${spotCls('mail-promo')}" type="button" data-act="spot" data-arg="mail-promo" data-spot="mail-promo"><b>Super Gains <small>08 h 03</small></b><span>Vous avez gagné une croisière !!!</span></button>
     </div><div id="mread"></div>`);
     if (S.spots['mail-spam-msg']) showSpamMail();
   }
@@ -1274,7 +1285,7 @@ function scrTableau(){
       ${inn ? '<span class="tag">INNOCENTÉ</span>' : ''}${ch ? `<span class="charges">${ch}</span>` : ''}${portrait(s.id)}<span class="nm">${s.short}</span><span class="pin"></span></button>`;
   }).join('');
   const crots = ['-2deg', '1.5deg', '2.5deg', '-1deg', '1deg', '-2.5deg', '2deg', '-1.5deg', '1deg'];
-  const cards = S.clues.map((k, i) => `<button class="ccard paper ${S.links[k] ? 'linked' : ''}" type="button" data-act="pickClue" data-arg="${k}" data-clue="${k}" style="--r:${crots[i % crots.length]}"><span class="pin"></span><span class="n">N° ${i + 1}</span><b>${esc(CLUES[k].title)}</b></button>`).join('');
+  const cards = S.clues.map((k, i) => `<button class="ccard paper ${S.links[k] ? 'linked' : ''}" type="button" data-act="pickClue" data-arg="${k}" data-clue="${k}" style="--r:${crots[i % crots.length]}"><span class="pin"></span><span class="n">N° ${i + 1}</span><b>${esc(CLUES[k].title)}</b><span class="rc">${esc(CLUES[k].recap)}</span></button>`).join('');
   const miss = accusationMissing();
   setHTML(screenEl, `
     <div class="topbar"><button class="back" type="button" data-act="go" data-arg="carte">${icon('back', 16)} Carte</button><span class="chip">${S.clues.length} / ${TOTAL_CLUES} indices</span></div>
@@ -1350,7 +1361,7 @@ let ACC = { s:null, p:[] };
 function scrAccusation(){
   if (accusationMissing().length) { S.screen = 'carte'; scrCarte(); return; }
   const sgrid = SUSPECTS.map(s => `<button class="accs ${ACC.s === s.id ? 'on' : ''} ${isInnocent(s.id) ? 'inn' : ''}" type="button" data-act="accS" data-arg="${s.id}">${portrait(s.id)}<span class="nm">${s.name}</span></button>`).join('');
-  const plist = S.clues.map((k, i) => `<button class="accp ${ACC.p.indexOf(k) > -1 ? 'on' : ''}" type="button" data-act="accP" data-arg="${k}"><span class="box">${ACC.p.indexOf(k) > -1 ? '✓' : ''}</span><span><small>Pièce n° ${i + 1}</small><b>${esc(CLUES[k].title)}</b></span></button>`).join('');
+  const plist = S.clues.map((k, i) => `<button class="accp ${ACC.p.indexOf(k) > -1 ? 'on' : ''}" type="button" data-act="accP" data-arg="${k}"><span class="box">${ACC.p.indexOf(k) > -1 ? '✓' : ''}</span><span><small>Pièce n° ${i + 1}</small><b>${esc(CLUES[k].title)}</b><span class="rc">${esc(CLUES[k].recap)}</span></span></button>`).join('');
   const ready = ACC.s && ACC.p.length === 2;
   setHTML(screenEl, `
     <div class="topbar"><button class="back" type="button" data-act="go" data-arg="carte">${icon('back', 16)} Carte</button>${S.attempts ? `<span class="chip">Tentative ${S.attempts + 1}</span>` : ''}</div>
@@ -1378,7 +1389,7 @@ function accuse(){
   }
   save();
   let msg = okSus ? (good === 1 ? TEASE.clicOne : TEASE.clicNone) : TEASE[ACC.s];
-  if (S.attempts >= 2) msg += " Indice de la commissaire : regarde la page de réservation, la boîte mail de Violette et la caisse. C’est là qu’elle s’est perdue.";
+  if (S.attempts >= 2) msg += " Indice de la commissaire : regarde la page de réservation, la boîte mail de Violette et le journal de son compte. C’est là qu’elle s’est perdue.";
   const o = overlay(`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">${badge(48)}<div><div class="kicker">Commissaire Daronne</div><div style="font-family:var(--serif);font-size:22px;font-weight:600">Objection.</div></div></div>
     <div class="body" id="teasetxt"></div>
     <button class="btn" type="button" data-close="again">Reprendre l’accusation</button>`, 'dark', () => {
@@ -1421,7 +1432,7 @@ function scrFin(seq){
   setTimeout(() => { const c = $('#closed'); if (c) c.classList.add('thudding'); }, 10);
   const lines = [
     { x:"Monsieur Clic-de-Trop est passé aux aveux. « Je voulais juste bien faire », qu’il répète. Ils disent tous ça." },
-    { x:"Violette ne s’est pas enfuie à cause du prix. Elle l’a vu, elle l’a accepté, elle a cliqué. Elle s’est perdue en route : un formulaire de 9 champs, un compte à créer, un mail de confirmation tombé dans les spams, et une étape 5 sur 6 de trop." },
+    { x:"Violette ne s’est pas enfuie à cause du prix. Elle l’a vu, elle l’a accepté, elle a cliqué. Elle s’est perdue en route : un formulaire de 9 champs, un compte à créer, puis un mail de confirmation tombé dans les spams. Son compte est resté bloqué à l’étape 4 sur 6. Elle n’a jamais vu la caisse." },
     { x:"Le post-it « Trop cher ?? », c’était la peur de Margaux. Pas la vérité." },
     { x:"Bonne nouvelle : Violette a été retrouvée. Elle a réservé ce matin, en deux clics. Elle dort comme un bébé." }
   ];
@@ -1580,12 +1591,15 @@ document.addEventListener('click', e => {
     case 'spot':
       if (arg === 'bureau-lampe') { S.lamp = !S.lamp; const d = $('#desk'); if (d) d.classList.toggle('off', !S.lamp); }
       if (arg === 'mail-spam-msg') showSpamMail();
+      if (arg === 'membre-journal' && !S.spots[arg]) { S.spots[arg] = 1; const j = el.closest('.journal'); if (j) { const t = j.querySelector('.tap'); if (t) t.outerHTML = fr('<span class="jl">14 h 35 : création du compte demandée.<br>14 h 36 : e-mail de confirmation envoyé.<br><mark>14 h 36 : en attente de confirmation.</mark><br><mark>14 h 37 : dernière activité.</mark><br>Statut : réservation bloquée à l’étape 4 sur 6.</span>'); } delete S.spots[arg]; }
       hitSpot(arg);
       if (arg === 'vente-cta' || arg === 'vente-prix') { const fi = document.querySelector('.fiche'); if (fi && !fi.classList.contains('open')) { setTimeout(() => { fi.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' }); fi.classList.add('pulse'); }, 900); } }
       break;
     case 'fiche':
       el.classList.add('open'); hitSpot('vente-fiche'); break;
-    case 'mailtab': mailTab(arg); break;
+    case 'mailtab':
+      if (arg === 'spam' && !S.spots['mail-tab-spam']) { S.spots['mail-tab-spam'] = 1; el.classList.remove('spot'); save(); }
+      mailTab(arg); break;
     case 'ask': { const p = arg.split(':'); askQ(p[0], +p[1]); break; }
     case 'pickClue': pickClue(arg); break;
     case 'pickSus': pickSus(arg); break;
