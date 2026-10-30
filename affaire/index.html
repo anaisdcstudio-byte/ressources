@@ -20,7 +20,7 @@
 
 // Lien du bouton final « Fais le CHECKPOINT ».
 // Remplace l'adresse entre guillemets par la page CHECKPOINT si besoin.
-const CHECKPOINT_URL = "https://www.chez-ladaronne.com/";
+const CHECKPOINT_URL = "https://www.chez-ladaronne.com/toncheckpoint";
 // Lien du post Instagram du jeu (carrousel du 8/11). À remplir après la publication : un bouton « Copier le lien du post » apparaît alors sur l'écran final.
 const POST_URL = "";
 
@@ -386,7 +386,13 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 .pol.target{transform:rotate(var(--r,0deg)) scale(1.05);box-shadow:0 0 0 2px var(--or),0 10px 18px rgba(0,0,0,.5)}
 .pol.innocent::after{content:"";position:absolute;left:-8%;right:-8%;top:44%;height:4px;border-radius:2px;background:linear-gradient(90deg,#a8834a,#ecd6a4,#a8834a);transform:rotate(-30deg);box-shadow:0 1px 2px rgba(0,0,0,.5)}
 .pol .tag{position:absolute;left:50%;top:22%;transform:translateX(-50%) rotate(-8deg);font:400 8px var(--typo);letter-spacing:.08em;color:#f3ebdb;background:rgba(0,61,68,.92);padding:2px 5px;border-radius:2px;white-space:nowrap;z-index:2}
-.pol .charges{position:absolute;right:-6px;top:-6px;min-width:20px;height:20px;border-radius:10px;background:#DCA04E;color:#0d2326;font:600 11px/20px var(--sans);text-align:center;padding:0 5px;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.pol .tag.sus{background:rgba(122,32,27,.94)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin:10px 0 0;font:400 13px var(--typo);color:rgba(255,247,234,.85)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.lg{display:inline-block;width:26px;height:3px;border-radius:2px}
+.lg.gold{background:#ecd6a4}
+.lg.red{background:#a8352b;box-shadow:0 0 0 1px rgba(255,247,234,.25)}
+.pol .charges{position:absolute;right:-6px;top:-6px;min-width:20px;height:20px;border-radius:10px;background:#a8352b;color:#FFF7EA;font:600 11px/20px var(--sans);text-align:center;padding:0 5px;box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .pin{position:absolute;left:50%;top:-5px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fbe8bf,#C9A96E 45%,#7d6235);box-shadow:0 2px 3px rgba(0,0,0,.5);z-index:4}
 .pol .pin{top:auto;bottom:-5px}
 .clues-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px;margin-top:30px;position:relative;z-index:2}
@@ -847,7 +853,9 @@ function updateDone(){
   S.done.bureau = lieuDone('bureau');
 }
 function isInnocent(sid){ return Object.keys(S.links).some(k => S.links[k] === sid && CLUES[k].rel.t === 'alibi' && CLUES[k].rel.s === sid); }
-function chargesOn(sid){ return Object.keys(S.links).filter(k => S.links[k] === sid && CLUES[k].rel.s === sid && CLUES[k].rel.t === 'charge').length; }
+// Soupçons : tout fil (non alibi) relié au bon suspect. Un alibi l'emporte toujours.
+function chargesOn(sid){ return Object.keys(S.links).filter(k => S.links[k] === sid && CLUES[k].rel.s === sid && CLUES[k].rel.t !== 'alibi').length; }
+const FEM = { prix:true, tard:true };
 
 function hitSpot(id){
   const first = !S.spots[id];
@@ -1282,7 +1290,7 @@ function scrTableau(){
   const pols = SUSPECTS.map((s, i) => {
     const inn = isInnocent(s.id), ch = chargesOn(s.id);
     return `<button class="pol ${inn ? 'innocent' : ''}" type="button" data-act="pickSus" data-arg="${s.id}" data-sus="${s.id}" style="--r:${rots[i]}" aria-label="${esc(s.name)}">
-      ${inn ? '<span class="tag">INNOCENTÉ</span>' : ''}${ch ? `<span class="charges">${ch}</span>` : ''}${portrait(s.id)}<span class="nm">${s.short}</span><span class="pin"></span></button>`;
+      ${inn ? `<span class="tag">INNOCENTÉ${FEM[s.id] ? 'E' : ''}</span>` : (ch ? `<span class="tag sus">SOUPÇONNÉ${FEM[s.id] ? 'E' : ''}</span>` : '')}${ch && !inn ? `<span class="charges">${ch}</span>` : ''}${portrait(s.id)}<span class="nm">${s.short}</span><span class="pin"></span></button>`;
   }).join('');
   const crots = ['-2deg', '1.5deg', '2.5deg', '-1deg', '1deg', '-2.5deg', '2deg', '-1.5deg', '1deg'];
   const cards = S.clues.map((k, i) => `<button class="ccard paper ${S.links[k] ? 'linked' : ''}" type="button" data-act="pickClue" data-arg="${k}" data-clue="${k}" style="--r:${crots[i % crots.length]}"><span class="pin"></span><span class="n">N° ${i + 1}</span><b>${esc(CLUES[k].title)}</b><span class="rc">${esc(CLUES[k].recap)}</span></button>`).join('');
@@ -1290,7 +1298,8 @@ function scrTableau(){
   setHTML(screenEl, `
     <div class="topbar"><button class="back" type="button" data-act="go" data-arg="carte">${icon('back', 16)} Carte</button><span class="chip">${S.clues.length} / ${TOTAL_CLUES} indices</span></div>
     <p class="kicker">Salle des enquêteurs</p><h1 class="h2">Le tableau en liège</h1>
-    <p class="lede">Touche un indice, puis le suspect qu’il concerne. Un alibi solide innocente. Une preuve accuse.</p>
+    <p class="lede">Touche un indice, puis le suspect qu’il concerne. Un alibi solide innocente. Un indice qui accuse tend un fil de soupçon.</p>
+    <p class="legend"><span><i class="lg gold"></i>Fil doré = alibi.</span><span><i class="lg red"></i>Fil rouge = soupçon.</span></p>
     <div class="cork" id="cork" style="margin-top:14px">
       <svg class="threads" id="threads" aria-hidden="true"></svg>
       <div class="suspects-row">${pols}</div>
@@ -1321,10 +1330,10 @@ function drawThreads(){
     const x2 = b.left + b.width / 2 - br.left - bl, y2 = b.top + b.height / 2 - br.top - bt;
     const mx = (x1 + x2) / 2, my = (y1 + y2) / 2 + 26;
     const t = CLUES[k].rel.t;
-    const col = t === 'charge' ? '#DCA04E' : '#efdcae';
-    const wd = t === 'charge' ? 2.4 : 1.8;
+    const col = t === 'alibi' ? '#ecd6a4' : '#a8352b';
+    const wd = t === 'alibi' ? 2 : 2.4;
     out += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="${wd + 1.2}" transform="translate(1 2)"/>`;
-    out += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="${col}" stroke-width="${wd}" ${t === 'ambiance' ? 'stroke-dasharray="5 4"' : ''} stroke-linecap="round"/>`;
+    out += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="${col}" stroke-width="${wd}" stroke-linecap="round"/>`;
   });
   svg.innerHTML = out;
 }
@@ -1345,11 +1354,34 @@ function pickSus(sid){
   if (!SELCLUE) { boardMsg('Choisis d’abord un indice, puis touche un suspect.', true); return; }
   const k = SELCLUE, c = CLUES[k], s = SUS[sid];
   let msg = '', bad = false;
-  if (c.rel.s !== sid) { msg = `Ce fil ne tient pas. Cet indice ne dit rien sur ${s.name}.`; bad = true; }
-  else if (c.rel.t === 'alibi') { S.links[k] = sid; msg = `Alibi confirmé. ${s.name} est innocenté${sid === 'prix' || sid === 'tard' ? 'e' : ''}. Un trait doré, et on n’en parle plus.`; }
-  else if (c.rel.t === 'charge') { S.links[k] = sid; msg = `Ça colle. Le fil se tend autour de ${s.name}.`; }
-  else if (c.rel.t === 'ambiance') { S.links[k] = sid; msg = `Une ambiance, pas une preuve. Mais ça commence à sentir le roussi pour ${s.name}.`; }
-  else if (c.rel.t === 'fausse') { msg = `Ce papier accuse le prix… ou il trahit juste la peur de Margaux ? Une peur n’est pas une preuve. Pas de fil pour ça.`; bad = true; }
+  const fem = FEM[sid] ? 'e' : '';
+  if (c.rel.s !== sid) {
+    const WRONG = [
+      `Ce fil ne tient pas. Cet indice ne dit rien sur ${s.name}.`,
+      `${s.name} te remercie pour l’attention, mais non : cet indice ne la concerne pas.`.replace('la concerne', FEM[sid] ? 'la concerne' : 'le concerne'),
+      `Tu relies ça à ${s.name} ? Même son avocat rigole. Essaie un autre suspect.`,
+      `Joli fil, mauvaise personne. ${s.name} hausse un sourcil et retourne à ses affaires.`
+    ];
+    msg = WRONG[(S.wrongN = (S.wrongN || 0) + 1) % WRONG.length]; bad = true;
+  }
+  else if (c.rel.t === 'alibi') {
+    S.links[k] = sid;
+    msg = `Alibi confirmé. ${s.name} est innocenté${fem}. Un trait doré, et on n’en parle plus.` + (chargesOn(sid) ? ' Les soupçons ne tiennent pas face à un alibi.' : '');
+  }
+  else {
+    S.links[k] = sid;
+    if (isInnocent(sid)) {
+      const what = k === 'brouillon' ? 'Un brouillon' : (k === 'postit' ? 'Un post-it' : 'Un soupçon');
+      msg = k === 'postit' ? 'Un post-it contre un alibi solide ? L’alibi gagne. Ce post-it, c’était la peur de Margaux.'
+        : `${what} contre un alibi solide ? L’alibi gagne. Ce papier, c’était la peur de Margaux.`;
+    } else if (c.rel.t === 'fausse') {
+      msg = `Soupçon noté : un fil rouge vers ${s.name}. Mais un soupçon n’est pas une preuve. Cherche son alibi.`;
+    } else if (c.rel.t === 'ambiance') {
+      msg = `Soupçon noté. Une ambiance, pas encore une preuve. Mais ça commence à sentir le roussi pour ${s.name}.`;
+    } else {
+      msg = `Soupçon noté. Le fil rouge se tend autour de ${s.name}.`;
+    }
+  }
   save();
   const keep = msg, wasBad = bad;
   scrTableau();
