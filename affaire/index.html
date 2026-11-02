@@ -1490,10 +1490,11 @@ function finRest(){
     <p class="muted center" style="margin:4px 0 0">À partager en story, pour narguer tes amis.</p>
     <img class="cardprev" id="cardprev" alt="Carte : j’ai résolu L’affaire de la cliente disparue en ${cardMinutes()} min, @chez.ladaronne">
     <div class="sharebtns">
-      <button class="btn" type="button" data-act="share">${icon('share', 18)} Partager</button>
+      <button class="btn" type="button" data-act="share">${icon('share', 18)} Partager en story Instagram</button>
       <button class="btn ghost" type="button" data-act="download">${icon('dl', 18)} Télécharger l’image</button>
     </div>
-    <p class="muted center" style="margin:10px 0 0">En la publiant, identifie <b>@chez.ladaronne</b> : tes amis pourront jouer en m’envoyant CLUEDO. Et moi, je repartage ta victoire 🥂</p>
+    <p class="muted center" style="margin:10px 0 0">Sur ton téléphone : touche le bouton, choisis <b>Instagram</b>, puis <b>Story</b>.</p>
+    <p class="muted center" style="margin:6px 0 0">En la publiant, identifie <b>@chez.ladaronne</b> : tes amis pourront jouer en m’envoyant CLUEDO. Et moi, je repartage ta victoire 🥂</p>
     ${POST_URL ? `<div class="sharebtns"><button class="btn ghost" type="button" data-act="copypost">${icon('share', 18)} Copier le lien du post</button></div>
     <p class="muted center" id="copypost-etat" style="margin:6px 0 0">Ajoute-le dans ta story avec le sticker « Lien » : tes amis arrivent sur le post et commentent CLUEDO.</p>` : ''}
     <div class="cta">
@@ -1587,17 +1588,16 @@ function downloadBlob(b){
   setTimeout(() => URL.revokeObjectURL(url), 4000);
 }
 async function shareCard(){
-  const text = `J’ai résolu L’affaire de la cliente disparue en ${cardMinutes()} min 🔎 · @chez.ladaronne`;
   let b = null;
   try { b = await getCardBlob(); } catch (e) {}
   try {
     if (b && typeof File === 'function' && navigator.canShare) {
       const file = new File([b], 'affaire-classee-chez-la-daronne.png', { type:'image/png' });
-      if (navigator.canShare({ files:[file] })) { await navigator.share({ files:[file], text, title:'L’affaire de la cliente disparue' }); track('partage', 'Partage (image)'); return; }
+      // Image seule : avec un texte en plus, certains téléphones proposent moins bien Instagram
+      if (navigator.canShare({ files:[file] })) { await navigator.share({ files:[file] }); track('partage', 'Partage (image)'); return; }
     }
-    if (navigator.share) { await navigator.share({ text, title:'L’affaire de la cliente disparue', url: location.href }); track('partage', 'Partage (lien)'); return; }
   } catch (e) { if (e && e.name === 'AbortError') return; }
-  if (b) { downloadBlob(b); track('partage', 'Partage (téléchargement)'); showNote('Image téléchargée. Tu peux la publier en story.', 'Carte d’enquête'); }
+  if (b) { downloadBlob(b); track('partage', 'Partage (téléchargement)'); showNote('Image téléchargée. Ouvre Instagram, crée une story et choisis cette image dans ta galerie.', 'Carte d’enquête'); }
 }
 
 /* =====================================================================
