@@ -541,6 +541,7 @@ function wipe(){
 }
 let S = fresh();
 (function(){ const saved = load(); if (saved && typeof saved === 'object') S = Object.assign(fresh(), saved); })();
+if (S.screen === 'tableau') S.screen = 'carte'; // le tableau en liège a été retiré le 2/11
 // Migration : l'ancienne version avait un lieu « La caisse » et un indice « ticket »
 function migrate(){
   try {
@@ -896,7 +897,7 @@ function hintText(){
   if (!S.done.mail) return "Sa sœur nous a apporté son téléphone. Fouille sa boîte mail. Partout. Même là où personne ne regarde.";
   if (!S.done.membre) return "Dernier lieu : l’espace membre. Là où Violette aurait dû arriver. Son compte a laissé un journal. Lis-le.";
   if (!allSuspectsDone()) return "Les suspects attendent en salle d’interrogatoire. Ils adorent parler d’eux. Laisse-les faire.";
-  return "Tu as tout ce qu’il faut. Direction l’accusation, preuves en main. Et pas de tremblement dans la voix.";
+  return "Tu as tout ce qu’il faut. Direction l’accusation. Et pas de tremblement dans la voix.";
 }
 
 /* =====================================================================
@@ -909,7 +910,6 @@ function go(screen){
   if (screen.indexOf('lieu:') === 0) track('lieu/' + screen.slice(5), 'Lieu ouvert : ' + screen.slice(5));
   else if (screen === 'bureau') track('lieu/bureau', 'Lieu ouvert : bureau de Margaux');
   else if (screen === 'interro' && first) track('interrogatoire', 'Salle d’interrogatoire');
-  else if (screen === 'tableau' && first) track('tableau', 'Tableau en liège');
   render();
 }
 
@@ -927,7 +927,6 @@ function render(){
     else if (s === 'bureau') scrBureau(seq);
     else if (s === 'interro') scrInterro();
     else if (s.indexOf('suspect:') === 0) scrSuspect(s.slice(8));
-    else if (s === 'tableau') scrTableau();
     else if (s === 'accusation') scrAccusation();
     else if (s === 'fin') scrFin(seq);
     else { S.screen = 'intro'; scrIntro(); }
@@ -1029,9 +1028,6 @@ function scrCarte(){
       </button>
       <button class="tile" type="button" data-act="go" data-arg="interro">
         <span class="ic">${icon('spot', 26)}</span><span class="nm">Salle d’interrogatoire</span><span class="st">${nSus} / 4 suspects interrogés</span>
-      </button>
-      <button class="tile wide ${n ? '' : 'locked'}" type="button" ${n ? 'data-act="go" data-arg="tableau"' : 'data-act="locked" data-arg="tableau"'}>
-        <span class="ic">${icon(n ? 'board' : 'lock', 28)}</span><span class="tx"><span class="nm">Le tableau en liège <small class="opt">facultatif</small></span><br><span class="st">${n ? 'Pour y voir clair : relie les indices aux suspects.' : 'Trouve un premier indice pour l’ouvrir.'}</span></span>
       </button>
       <button class="tile wide ${canAccuse ? 'ready' : 'locked'}" type="button" ${canAccuse ? 'data-act="go" data-arg="accusation"' : 'data-act="locked" data-arg="accusation"'}>
         <span class="ic">${icon(canAccuse ? 'loupe' : 'lock', 28)}</span><span class="tx"><span class="nm">L’accusation</span><br><span class="st">${canAccuse ? 'Les preuves sont réunies. À toi de désigner le coupable.' : 'Pour accuser, il te reste à : ' + miss.join(' et ') + '.'}</span></span>
@@ -1326,129 +1322,22 @@ async function askQ(id, qi){
   drawQButtons(id);
 }
 
-/* ---------- Tableau en liège ---------- */
-let SELCLUE = null;
-function scrTableau(){
-  if (!S.clues.length) { S.screen = 'carte'; scrCarte(); return; }
-  SELCLUE = null;
-  const rots = ['-3deg', '2deg', '-1.5deg', '3deg'];
-  const pols = SUSPECTS.map((s, i) => {
-    const inn = isInnocent(s.id), ch = chargesOn(s.id);
-    return `<button class="pol ${inn ? 'innocent' : ''}" type="button" data-act="pickSus" data-arg="${s.id}" data-sus="${s.id}" style="--r:${rots[i]}" aria-label="${esc(s.name)}">
-      ${inn ? `<span class="tag">INNOCENTÉ${FEM[s.id] ? 'E' : ''}</span>` : (ch ? `<span class="tag sus">SOUPÇONNÉ${FEM[s.id] ? 'E' : ''}</span>` : '')}${ch && !inn ? `<span class="charges">${ch}</span>` : ''}${portrait(s.id)}<span class="nm">${s.short}</span><span class="pin"></span></button>`;
-  }).join('');
-  const crots = ['-2deg', '1.5deg', '2.5deg', '-1deg', '1deg', '-2.5deg', '2deg', '-1.5deg', '1deg'];
-  const cards = S.clues.map((k, i) => `<button class="ccard paper ${S.links[k] ? 'linked' : ''}" type="button" data-act="pickClue" data-arg="${k}" data-clue="${k}" style="--r:${crots[i % crots.length]}"><span class="pin"></span><span class="n">N° ${i + 1}</span><b>${esc(CLUES[k].title)}</b><span class="rc">${esc(CLUES[k].recap)}</span></button>`).join('');
-  const miss = accusationMissing();
-  setHTML(screenEl, `
-    <div class="topbar"><button class="back" type="button" data-act="go" data-arg="carte">${icon('back', 16)} Carte</button><span class="chip">${S.clues.length} / ${TOTAL_CLUES} indices</span></div>
-    <p class="kicker">Salle des enquêteurs</p><h1 class="h2">Le tableau en liège</h1>
-    <p class="lede">Touche un indice, puis le suspect qu’il concerne. Un alibi solide innocente. Un indice qui accuse tend un fil de soupçon.</p>
-    <p class="legend"><span><i class="lg gold"></i>Fil doré = alibi.</span><span><i class="lg red"></i>Fil rouge = soupçon.</span></p>
-    <div class="cork" id="cork" style="margin-top:14px">
-      <svg class="threads" id="threads" aria-hidden="true"></svg>
-      <div class="suspects-row">${pols}</div>
-      <div class="clues-grid">${cards}</div>
-    </div>
-    <div class="boardmsg" id="boardmsg">Choisis un indice.</div>
-    <div style="margin-top:16px">${miss.length ? `<p class="muted center">Pour accuser, il te reste à : ${miss.join(' et ')}.</p><button class="btn ghost" type="button" data-act="go" data-arg="carte">Retour à la carte</button>`
-      : `<button class="btn" type="button" data-act="go" data-arg="accusation">Passer à l’accusation</button><button class="btn ghost" type="button" data-act="go" data-arg="carte">Retour à la carte</button>`}</div>
-  `);
-  requestAnimationFrame(drawThreads);
-  setTimeout(drawThreads, 400);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawThreads).catch(() => {});
-}
-function drawThreads(){
-  const board = $('#cork'), svg = $('#threads'); if (!board || !svg) return;
-  const br = board.getBoundingClientRect();
-  const bl = board.clientLeft, bt = board.clientTop;
-  const w = board.clientWidth, h = board.clientHeight;
-  svg.setAttribute('width', w); svg.setAttribute('height', h); svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-  svg.style.left = '0px'; svg.style.top = '0px';
-  let out = '';
-  Object.keys(S.links).forEach(k => {
-    const sid = S.links[k];
-    const c = board.querySelector(`[data-clue="${k}"] .pin`), p = board.querySelector(`[data-sus="${sid}"] .pin`);
-    if (!c || !p) return;
-    const a = c.getBoundingClientRect(), b = p.getBoundingClientRect();
-    const x1 = a.left + a.width / 2 - br.left - bl, y1 = a.top + a.height / 2 - br.top - bt;
-    const x2 = b.left + b.width / 2 - br.left - bl, y2 = b.top + b.height / 2 - br.top - bt;
-    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2 + 26;
-    const t = CLUES[k].rel.t;
-    const col = t === 'alibi' ? '#ecd6a4' : '#a8352b';
-    const wd = t === 'alibi' ? 2 : 2.4;
-    out += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="${wd + 1.2}" transform="translate(1 2)"/>`;
-    out += `<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} Q${mx.toFixed(1)} ${my.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}" fill="none" stroke="${col}" stroke-width="${wd}" stroke-linecap="round"/>`;
-  });
-  svg.innerHTML = out;
-}
-window.addEventListener('resize', () => { if (S.screen === 'tableau') drawThreads(); });
-function boardMsg(t, bad){
-  const m = $('#boardmsg'); if (!m) return;
-  m.classList.remove('bad'); void m.offsetWidth;
-  m.textContent = fr(t);
-  if (bad) m.classList.add('bad');
-}
-function pickClue(k){
-  SELCLUE = SELCLUE === k ? null : k;
-  $$('.ccard').forEach(c => c.classList.toggle('sel', c.getAttribute('data-clue') === SELCLUE));
-  $$('.pol').forEach(p => p.classList.toggle('target', !!SELCLUE));
-  boardMsg(SELCLUE ? `« ${CLUES[k].title} ». À quel suspect relies-tu cet indice ?` : 'Choisis un indice.');
-}
-function pickSus(sid){
-  if (!SELCLUE) { boardMsg('Choisis d’abord un indice, puis touche un suspect.', true); return; }
-  const k = SELCLUE, c = CLUES[k], s = SUS[sid];
-  let msg = '', bad = false;
-  const fem = FEM[sid] ? 'e' : '';
-  if (c.rel.s !== sid) {
-    const WRONG = [
-      `Ce fil ne tient pas. Cet indice ne dit rien sur ${s.name}.`,
-      `${s.name} te remercie pour l’attention, mais non : cet indice ne la concerne pas.`.replace('la concerne', FEM[sid] ? 'la concerne' : 'le concerne'),
-      `Tu relies ça à ${s.name} ? Même son avocat rigole. Essaie un autre suspect.`,
-      `Joli fil, mauvaise personne. ${s.name} hausse un sourcil et retourne à ses affaires.`
-    ];
-    msg = WRONG[(S.wrongN = (S.wrongN || 0) + 1) % WRONG.length]; bad = true;
-  }
-  else if (c.rel.t === 'alibi') {
-    S.links[k] = sid;
-    msg = `Alibi confirmé. ${s.name} est innocenté${fem}. Un trait doré, et on n’en parle plus.` + (chargesOn(sid) ? ' Les soupçons ne tiennent pas face à un alibi.' : '');
-  }
-  else {
-    S.links[k] = sid;
-    if (isInnocent(sid)) {
-      const what = k === 'brouillon' ? 'Un brouillon' : (k === 'postit' ? 'Un post-it' : 'Un soupçon');
-      msg = k === 'postit' ? 'Un post-it contre un alibi solide ? L’alibi gagne. Ce post-it, c’était la peur de Margaux.'
-        : `${what} contre un alibi solide ? L’alibi gagne. Ce papier, c’était la peur de Margaux.`;
-    } else if (c.rel.t === 'fausse') {
-      msg = `Soupçon noté : un fil rouge vers ${s.name}. Mais un soupçon n’est pas une preuve. Cherche son alibi.`;
-    } else if (c.rel.t === 'ambiance') {
-      msg = `Soupçon noté. Une ambiance, pas encore une preuve. Mais ça commence à sentir le roussi pour ${s.name}.`;
-    } else {
-      msg = `Soupçon noté. Le fil rouge se tend autour de ${s.name}.`;
-    }
-  }
-  save();
-  const keep = msg, wasBad = bad;
-  scrTableau();
-  boardMsg(keep, wasBad);
-}
-
 /* ---------- Accusation ---------- */
 let ACC = { s:null, p:[] };
 function scrAccusation(){
   if (accusationMissing().length) { S.screen = 'carte'; scrCarte(); return; }
-  const sgrid = SUSPECTS.map(s => `<button class="accs ${ACC.s === s.id ? 'on' : ''} ${isInnocent(s.id) ? 'inn' : ''}" type="button" data-act="accS" data-arg="${s.id}">${portrait(s.id)}<span class="nm">${s.name}</span></button>`).join('');
+  const sgrid = SUSPECTS.map(s => `<button class="accs ${ACC.s === s.id ? 'on' : ''}" type="button" data-act="accS" data-arg="${s.id}">${portrait(s.id)}<span class="nm">${s.name}</span></button>`).join('');
   const plist = S.clues.map((k, i) => `<button class="accp ${ACC.p.indexOf(k) > -1 ? 'on' : ''}" type="button" data-act="accP" data-arg="${k}"><span class="box">${ACC.p.indexOf(k) > -1 ? '✓' : ''}</span><span><small>Pièce n° ${i + 1}</small><b>${esc(CLUES[k].title)}</b><span class="rc">${esc(CLUES[k].recap)}</span></span></button>`).join('');
   const ready = ACC.s && ACC.p.length === 2;
   setHTML(screenEl, `
     <div class="topbar"><button class="back" type="button" data-act="go" data-arg="carte">${icon('back', 16)} Carte</button>${S.attempts ? `<span class="chip">Tentative ${S.attempts + 1}</span>` : ''}</div>
     <p class="kicker">Le moment de vérité</p><h1 class="h2">Qui a fait disparaître Violette ?</h1>
-    <p class="lede">Choisis le coupable, puis les deux preuves qui le confondent. La commissaire n’accepte pas les intuitions sans papiers.</p>
+    <p class="lede">Désigne le coupable, puis choisis <strong>deux preuves qui l’accusent</strong>. Attention : certaines pièces innocentent, d’autres sont des fausses pistes. La commissaire n’accepte pas les intuitions sans papiers.</p>
     <div class="sec-title"><h2 class="h3">1. Le coupable</h2></div>
     <div class="accgrid">${sgrid}</div>
-    <div class="sec-title"><h2 class="h3">2. Deux preuves</h2><span class="muted">${ACC.p.length} / 2</span></div>
+    <div class="sec-title"><h2 class="h3">2. Deux preuves qui l’accusent</h2><span class="muted">${ACC.p.length} / 2</span></div>
     <div>${plist}</div>
-    <div class="stickybar"><button class="btn" type="button" data-act="accuse" ${ready ? '' : 'disabled'}>${ready ? 'J’accuse !' : (ACC.s ? 'Choisis deux preuves' : 'Choisis un coupable')}</button></div>
+    <div class="stickybar"><button class="btn" type="button" data-act="accuse" ${ready ? '' : 'disabled'}>${ready ? 'J’accuse !' : (ACC.s ? 'Choisis deux preuves qui l’accusent' : 'Choisis un coupable')}</button></div>
   `);
 }
 function accuse(){
@@ -1660,7 +1549,7 @@ document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'); if (!el) { deadTap(e); return; }
   const act = el.getAttribute('data-act'), arg = el.getAttribute('data-arg');
   if (act === 'cta') { track('checkpoint', 'Clic CHECKPOINT'); return; }
-  if (act === 'spot' || act === 'pickSus' || act === 'pickClue') e.stopPropagation();
+  if (act === 'spot') e.stopPropagation();
   switch (act) {
     case 'start':
       if (!S.startTime) { S.startTime = Date.now(); S.elapsed = 0; }
@@ -1670,7 +1559,6 @@ document.addEventListener('click', e => {
     case 'go': go(arg); break;
     case 'locked':
       if (arg === 'lieu') showNote('Pas si vite. Suis Violette dans l’ordre : on ne saute pas d’étape dans une enquête. (Elle, on aurait aimé qu’elle puisse.)', 'La commissaire');
-      else if (arg === 'tableau') showNote('Le tableau est vide. Va d’abord relever un indice.', 'La commissaire');
       else showNote('Pas d’accusation sans preuves. Il te reste à : ' + accusationMissing().join(' et ') + '.', 'La commissaire');
       break;
     case 'spot':
@@ -1687,8 +1575,6 @@ document.addEventListener('click', e => {
       mailTab(arg); break;
     case 'ask': { const p = arg.split(':'); askQ(p[0], +p[1]); break; }
     case 'askbad': { const p = arg.split(':'); askBad(p[0], +p[1]); break; }
-    case 'pickClue': pickClue(arg); break;
-    case 'pickSus': pickSus(arg); break;
     case 'accS': ACC.s = arg; { const y = window.scrollY; scrAccusation(); window.scrollTo(0, y); } break;
     case 'accP': {
       const i = ACC.p.indexOf(arg);
