@@ -661,12 +661,22 @@ const NOTES = {
   'bureau-lampe':"Clic. La lumière change, les ombres aussi. Dans une enquête, c’est souvent ce qu’on ne regarde pas qui compte."
 };
 
+// Pourquoi une pièce n'est pas une preuve contre le coupable (indices après une accusation ratée)
+const WHY_NOT = {
+  rep1min: "« Une réponse en une minute » n’accuse personne : elle innocente Madame Réponse-Tardive.",
+  coeur: "« C’est exactement ce qu’il me faut » n’accuse personne : elle innocente Monsieur Message-Flou.",
+  prixvu: "La fiche de surveillance innocente Madame Trop-Chère : Violette a vu le prix, et elle a cliqué quand même.",
+  postit: "Le post-it « Trop cher ?? », c’est la peur de Margaux. Une fausse piste.",
+  brouillon: "Le brouillon froissé, c’est encore la peur de Margaux. Fausse piste.",
+  porte: "La porte fermée montre que personne n’est arrivé. Pas pourquoi. Il me faut l’endroit précis où Violette a été bloquée."
+};
 const TEASE = {
   prix: "Ah. Tu as accusé le prix, comme tout le monde… 😏 Relis la fiche de surveillance : Violette a regardé le prix 1 min 40, ET elle a cliqué sur « Je réserve ». Une cliente qui fuit le prix ne clique pas. Suis-la plutôt après le clic.",
   flou: "Monsieur Message-Flou ? Violette a écrit « C’est exactement ce qu’il me faut ». Difficile de faire plus clair 😏 Ce n’est pas l’offre qu’elle n’a pas comprise. Regarde ce qui lui est arrivé après le clic.",
   tard: "Une minute de délai, et tu accuses Madame Réponse-Tardive de lenteur ? Je te trouve sévère 😏 Margaux a répondu à 14 h 33. Le problème est plus loin sur le chemin.",
-  clicOne: "Bon suspect. Une de tes preuves tient debout, l’autre ferait rire son avocat. Il me faut deux preuves qui montrent où Violette s’est perdue entre le clic « Je réserve » et l’espace membre.",
-  clicNone: "Bon suspect, mauvaises preuves. Avec ça, son avocat le fait sortir avant le goûter. Montre-moi où Violette s’est perdue, concrètement, entre le clic « Je réserve » et l’espace membre."
+  okSus: "Bon suspect, je te l’accorde. Mais tes preuves ne tiennent pas toutes debout.",
+  keysWrongSus: "Tes deux preuves, elles, sont bonnes. Elles accusent juste quelqu’un d’autre. Demande-toi qui rajoute des étapes sur le chemin de Violette.",
+  needKeys: "Il me faut deux preuves qui montrent où Violette s’est perdue, entre le clic « Je réserve » et l’espace membre."
 };
 
 /* =====================================================================
@@ -1354,13 +1364,17 @@ function accuse(){
     return;
   }
   save();
-  let msg = okSus ? (good === 1 ? TEASE.clicOne : TEASE.clicNone) : TEASE[ACC.s];
+  const wrongP = ACC.p.filter(k => KEY_CLUES.indexOf(k) < 0);
+  let msg;
+  if (!okSus) msg = TEASE[ACC.s] + ' ' + (good === 2 ? TEASE.keysWrongSus : wrongP.map(k => WHY_NOT[k]).join(' '));
+  else msg = TEASE.okSus + ' ' + wrongP.map(k => WHY_NOT[k]).join(' ') + ' ' + TEASE.needKeys;
+  const keepP = ACC.p.filter(k => KEY_CLUES.indexOf(k) > -1);
   if (S.attempts >= 2) msg += " Indice de la commissaire : regarde la page de réservation, la boîte mail de Violette et le journal de son compte. C’est là qu’elle s’est perdue.";
   const o = overlay(`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">${badge(48)}<div><div class="kicker">Commissaire Daronne</div><div style="font-family:var(--serif);font-size:22px;font-weight:600">Objection.</div></div></div>
     <div class="body" id="teasetxt"></div>
     <button class="btn" type="button" data-close="again">Reprendre l’accusation</button>`, 'dark', () => {
       if (SEQ) { SEQ.cancel = true; clearTimeout(SEQ.timer); } skipBtn.hidden = true;
-      ACC = { s: okSus ? 'clic' : null, p:[] }; scrAccusation(); try { window.scrollTo(0, 0); } catch (e) {}
+      ACC = { s: okSus ? 'clic' : null, p: keepP }; scrAccusation(); try { window.scrollTo(0, 0); } catch (e) {}
     });
   const seq = newSeq();
   const t = $('#teasetxt', o);
