@@ -210,6 +210,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 .spot.obj:not(.seen)::after{content:"";position:absolute;top:4%;right:6%;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle,#fff3d6 0%,#DCA04E 45%,rgba(220,160,78,0) 72%);animation:glint 1.8s ease-in-out infinite;pointer-events:none}
 .lfoot{margin-top:20px}
 .lfoot .wait{font-size:13px;color:rgba(255,247,234,.6);text-align:center;margin:0 0 12px;font-family:var(--typo)}
+.opt{font:500 10px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--or);border:1px solid rgba(201,169,110,.5);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:2px}
 .howto{font-size:12.5px;color:rgba(255,247,234,.62);text-align:center;margin:12px 0 0}
 
 /* Téléphone DM */
@@ -373,6 +374,9 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appeara
 .qbtns{display:flex;flex-direction:column;gap:10px;margin-top:12px}
 .qbtn{min-height:54px;padding:12px 16px;border-radius:14px;border:1px solid rgba(201,169,110,.5);background:rgba(0,0,0,.2);color:var(--ivoire);font:500 14.5px/1.35 var(--sans);text-align:left}
 .qbtn[disabled]{opacity:.38}
+.qpick{margin:0 0 2px;font-size:12.5px;color:rgba(255,247,234,.7);font-family:var(--typo)}
+.a.cop{background:rgba(0,82,91,.55);border:1px solid rgba(201,169,110,.45);color:var(--ivoire)}
+.a.cop small{display:block;font:500 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--or);margin-bottom:4px}
 .qbtn.used{opacity:.38;text-decoration:line-through;text-decoration-color:rgba(201,169,110,.7)}
 
 /* Tableau en liège */
@@ -524,7 +528,7 @@ function esc(t){ return String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt
    ===================================================================== */
 const KEY = 'chezladaronne-affaire-cliente-disparue-v1';
 function fresh(){
-  return { screen:'intro', startTime:null, endTime:null, elapsed:0, spots:{}, clues:[], done:{}, asked:{}, links:{}, attempts:0, solved:false, lamp:true, visited:{} };
+  return { screen:'intro', startTime:null, endTime:null, elapsed:0, spots:{}, clues:[], done:{}, asked:{}, wrong:{}, links:{}, attempts:0, solved:false, lamp:true, visited:{} };
 }
 function load(){
   try { const raw = localStorage.getItem(KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
@@ -579,30 +583,38 @@ const SUSPECTS = [
   { id:'prix', name:'Madame Trop-Chère', role:'Le prix', short:'Trop-Chère',
     desc:"Fourrure, perles, regard las. On l’accuse de tout depuis toujours. Elle a l’habitude.",
     qa:[
-      { q:"Où étiez-vous mardi, à 14 h 35 ?",
+      { bad:{ q:"Ces perles, elles sont vraies ?", a:"Aussi vraies que mon prix : affichées, assumées et pas négociables.", cop:"Ça ne nous aidera pas. Les perles ne sont pas sur la scène du crime." },
+        q:"Où étiez-vous mardi, à 14 h 35 ?",
         a:"Sur la page de vente, voyons. En grand, en gras : 149 €. Violette m’a regardée pendant une bonne minute. Et puis elle a cliqué. Je ne fais fuir que celles qui ne sont pas prêtes. Elle, elle l’était." },
-      { q:"Margaux a écrit « Trop cher ?? » sur un post-it. Une explication ?",
+      { bad:{ q:"Vous faites des promos, parfois ?", a:"Une promo ? Moi ? Je préfère encore qu’on m’accuse. Ah. C’est déjà fait.", cop:"Ça ne nous aidera pas. On enquête, on ne fait pas les soldes." },
+        q:"Margaux a écrit « Trop cher ?? » sur un post-it. Une explication ?",
         a:"Ce post-it, c’est sa peur à elle, pas mon alibi. On m’accuse toujours la première : je suis la seule qu’on voit. Les autres, on ne les remarque jamais. C’est bien pratique pour eux." } ] },
   { id:'flou', name:'Monsieur Message-Flou', role:'L’offre incompréhensible', short:'Message-Flou',
     desc:"Contours incertains, discours vaporeux. Même sa silhouette n’est pas très claire.",
     qa:[
-      { q:"L’offre de Margaux était-elle claire ?",
+      { bad:{ q:"Vous pouvez épeler votre nom ?", a:"M… E… Enfin, ça dépend de ce qu’on entend par « nom ». C’est un concept, au fond.", cop:"Ça ne nous aidera pas. Et j’ai mal à la tête." },
+        q:"L’offre de Margaux était-elle claire ?",
         a:"D’habitude, je fais écrire « accompagnement holistique vers ton alignement profond », et plus personne ne sait ce qu’il achète. Là ? « Tu te réveilles à 3 h ? En 3 séances, tu retrouves des nuits qui reposent vraiment. 149 €. » La douleur, le résultat, le prix. Une clarté insultante. Je n’ai rien pu faire." },
-      { q:"Violette avait-elle compris ce qu’elle achetait ?",
+      { bad:{ q:"Plutôt thé ou café ?", a:"Une infusion d’intentions alignées, en pleine conscience.", cop:"Ça ne nous aidera pas. Note pour plus tard : ne jamais lui offrir à boire." },
+        q:"Violette avait-elle compris ce qu’elle achetait ?",
         a:"Évidemment. Elle a lu « tu te réveilles à 3 h » et elle s’est reconnue. Quand je passe quelque part, on reçoit des « euh, c’est quoi exactement ? ». Elle a écrit « c’est exactement ce qu’il me faut ». Relisez ses messages, au lieu de m’embêter." } ] },
   { id:'tard', name:'Madame Réponse-Tardive', role:'Le message sans réponse', short:'Réponse-Tardive',
     desc:"Montre à gousset, sablier dans le sac. Elle arrive toujours après la bataille.",
     qa:[
-      { q:"Combien de temps Violette a-t-elle attendu une réponse ?",
+      { bad:{ q:"Elle donne l’heure, votre montre à gousset ?", a:"Elle retarde de trois jours. C’est fait exprès.", cop:"Ça ne nous aidera pas. On savait déjà qu’elle était en retard sur tout." },
+        q:"Combien de temps Violette a-t-elle attendu une réponse ?",
         a:"Ne m’en parlez pas. Moi, je fais attendre trois jours, avec un « désolée, je vois ton message que maintenant 🙈 ». Cette Margaux m’a volé mon travail. Demandez-lui à quelle heure elle a répondu, vous verrez." },
-      { q:"Vous étiez où, mardi après-midi ?",
+      { bad:{ q:"Vous lisez vos mails, le week-end ?", a:"Je vous réponds… lundi. Ou mardi. Je mets un rappel.", cop:"Ça ne nous aidera pas. Et elle ne le mettra jamais, ce rappel." },
+        q:"Vous étiez où, mardi après-midi ?",
         a:"En vacances forcées. Margaux avait son téléphone à la main, les notifications activées. Je n’ai eu aucune chance. C’est une injustice, d’ailleurs." } ] },
   { id:'clic', name:'Monsieur Clic-de-Trop', role:'Le parcours labyrinthe', short:'Clic-de-Trop',
     desc:"Haut-de-forme, nœud papillon, sourire de maître d’hôtel. Il a toujours une porte de plus à vous ouvrir.",
     qa:[
-      { q:"Que faisiez-vous sur le chemin de Violette ?",
+      { bad:{ q:"Joli nœud papillon. Vous l’avez trouvé où ?", a:"Secret de maître d’hôtel. Je vous ouvre une autre porte pour en parler ?", cop:"Ça ne nous aidera pas. Et on ne passe pas par ses portes." },
+        q:"Que faisiez-vous sur le chemin de Violette ?",
         a:"Moi ? Je ne fais que guider les gens… Une petite question par-ci, une petite étape par-là. C’est pour leur bien. On ne va quand même pas acheter n’importe comment." },
-      { q:"Combien d’étapes entre le clic « Je réserve » et l’espace membre ?",
+      { bad:{ q:"Vous avez combien de chapeaux ?", a:"Un par occasion. Et j’adore les occasions.", cop:"Ça ne nous aidera pas. Revenons à Violette." },
+        q:"Combien d’étapes entre le clic « Je réserve » et l’espace membre ?",
         a:"Le juste nombre. Je n’ai jamais compté : compter, c’est fatigant. Vous avez d’autres questions ? Non ? Parfait. J’ai un rendez-vous. Enfin, un rendez-vous en plusieurs étapes." } ] }
 ];
 const SUS = Object.fromEntries(SUSPECTS.map(s => [s.id, s]));
@@ -884,7 +896,6 @@ function hintText(){
   if (!S.done.mail) return "Sa sœur nous a apporté son téléphone. Fouille sa boîte mail. Partout. Même là où personne ne regarde.";
   if (!S.done.membre) return "Dernier lieu : l’espace membre. Là où Violette aurait dû arriver. Son compte a laissé un journal. Lis-le.";
   if (!allSuspectsDone()) return "Les suspects attendent en salle d’interrogatoire. Ils adorent parler d’eux. Laisse-les faire.";
-  if (!Object.keys(S.links).length) return "Tu as tout ce qu’il faut. Le tableau en liège peut t’aider à innocenter du monde. Puis, accuse.";
   return "Tu as tout ce qu’il faut. Direction l’accusation, preuves en main. Et pas de tremblement dans la voix.";
 }
 
@@ -1020,7 +1031,7 @@ function scrCarte(){
         <span class="ic">${icon('spot', 26)}</span><span class="nm">Salle d’interrogatoire</span><span class="st">${nSus} / 4 suspects interrogés</span>
       </button>
       <button class="tile wide ${n ? '' : 'locked'}" type="button" ${n ? 'data-act="go" data-arg="tableau"' : 'data-act="locked" data-arg="tableau"'}>
-        <span class="ic">${icon(n ? 'board' : 'lock', 28)}</span><span class="tx"><span class="nm">Le tableau en liège</span><br><span class="st">${n ? 'Relie les indices aux suspects. Barre les innocents.' : 'Trouve un premier indice pour l’ouvrir.'}</span></span>
+        <span class="ic">${icon(n ? 'board' : 'lock', 28)}</span><span class="tx"><span class="nm">Le tableau en liège <small class="opt">facultatif</small></span><br><span class="st">${n ? 'Pour y voir clair : relie les indices aux suspects.' : 'Trouve un premier indice pour l’ouvrir.'}</span></span>
       </button>
       <button class="tile wide ${canAccuse ? 'ready' : 'locked'}" type="button" ${canAccuse ? 'data-act="go" data-arg="accusation"' : 'data-act="locked" data-arg="accusation"'}>
         <span class="ic">${icon(canAccuse ? 'loupe' : 'lock', 28)}</span><span class="tx"><span class="nm">L’accusation</span><br><span class="st">${canAccuse ? 'Les preuves sont réunies. À toi de désigner le coupable.' : 'Pour accuser, il te reste à : ' + miss.join(' et ') + '.'}</span></span>
@@ -1058,7 +1069,7 @@ function refreshLieu(){
       : `<p class="wait">Fin du chemin. Violette ne s’est jamais rendue jusqu’ici.</p><button class="btn" type="button" data-act="go" data-arg="carte">Retour à la carte</button>`);
   } else {
     const left = Object.keys(CLUES).filter(k => CLUES[k].lieu === id && S.clues.indexOf(k) < 0).length;
-    setHTML(f, `<p class="wait">Encore ${left} indice${left > 1 ? 's' : ''} à relever ici. Touche ce qui te paraît louche.</p>
+    setHTML(f, `<p class="wait">Encore ${left} indice${left > 1 ? 's' : ''} à relever ici. Touche seulement ce qui brille ✨</p>
       <button class="btn ghost" type="button" data-act="go" data-arg="carte">Retour à la carte</button>`);
   }
 }
@@ -1233,15 +1244,20 @@ function scrInterro(){
   setHTML(screenEl, `
     <div class="topbar"><button class="back" type="button" data-act="go" data-arg="carte">${icon('back', 16)} Carte</button><span class="chip">${SUSPECTS.filter(s => suspectDone(s.id)).length} / 4</span></div>
     <p class="kicker">Commissariat, sous-sol</p><h1 class="h2">Salle d’interrogatoire</h1>
-    <p class="lede">Quatre suspects. Deux questions chacun. Ils mentent tous un peu, et surtout sur eux-mêmes.</p>
+    <p class="lede">Quatre suspects. Deux questions utiles chacun. Choisis bien : certaines ne mènent nulle part. Et ils mentent tous un peu, surtout sur eux-mêmes.</p>
     <hr class="rule">
     <div class="room">${cards}</div>
   `);
 }
+function copBubble(text){ return `<div class="a cop"><small>La commissaire</small><span>${esc(fr(text))}</span></div>`; }
+function badBlock(s, qi){ const b = s.qa[qi].bad; return `<div class="q">${esc(b.q)}</div><div class="a paper">${esc(b.a)}</div>${copBubble(b.cop)}`; }
+function nextQ(id){ const asked = S.asked[id] || []; return [0, 1].find(i => asked.indexOf(i) < 0); }
 function scrSuspect(id){
   const s = SUS[id]; if (!s) { S.screen = 'interro'; scrInterro(); return; }
-  const asked = S.asked[id] || [];
-  const past = asked.map(qi => `<div class="q">${esc(s.qa[qi].q)}</div><div class="a paper">${esc(s.qa[qi].a)}</div>`).join('');
+  const asked = S.asked[id] || [], wrong = S.wrong || {};
+  let past = asked.map(qi => (wrong[id + ':' + qi] ? badBlock(s, qi) : '') + `<div class="q">${esc(s.qa[qi].q)}</div><div class="a paper">${esc(s.qa[qi].a)}</div>`).join('');
+  const r = nextQ(id);
+  if (r !== undefined && wrong[id + ':' + r]) past += badBlock(s, r);
   setHTML(screenEl, `
     <div class="topbar"><button class="back" type="button" data-act="go" data-arg="interro">${icon('back', 16)} Suspects</button><span class="chip">${asked.length} / 2 questions</span></div>
     <div class="spotlight">${portrait(id)}<p class="nm">${s.name}</p><p class="role">${s.role}</p><p class="desc">${esc(s.desc)}</p></div>
@@ -1252,14 +1268,43 @@ function scrSuspect(id){
   drawQButtons(id);
 }
 function drawQButtons(id){
-  const s = SUS[id], asked = S.asked[id] || [];
-  setHTML($('#qbtns'), s.qa.map((qa, i) => `<button class="qbtn ${asked.indexOf(i) > -1 ? 'used' : ''}" type="button" data-act="ask" data-arg="${id}:${i}" ${asked.indexOf(i) > -1 ? 'disabled' : ''}>${esc(qa.q)}</button>`).join(''));
+  const s = SUS[id], r = nextQ(id), wrong = S.wrong || {};
   const f = $('#sfoot');
-  if (suspectDone(id)) {
+  if (r === undefined) {
+    setHTML($('#qbtns'), '');
     const nx = SUSPECTS.find(x => !suspectDone(x.id));
     setHTML(f, nx ? `<button class="btn" type="button" data-act="go" data-arg="suspect:${nx.id}">Suspect suivant : ${nx.name}</button><button class="btn ghost" type="button" data-act="go" data-arg="carte">Retour à la carte</button>`
       : `<p class="muted center typo">Tous les suspects ont parlé. Enfin, parlé… ils se sont surtout défendus.</p><button class="btn" type="button" data-act="go" data-arg="carte">Retour à la carte</button>`);
-  } else f.innerHTML = '';
+    return;
+  }
+  const used = !!wrong[id + ':' + r];
+  const good = `<button class="qbtn" type="button" data-act="ask" data-arg="${id}:${r}">${esc(s.qa[r].q)}</button>`;
+  const bad = `<button class="qbtn ${used ? 'used' : ''}" type="button" data-act="askbad" data-arg="${id}:${r}" ${used ? 'disabled' : ''}>${esc(s.qa[r].bad.q)}</button>`;
+  const flip = (SUSPECTS.findIndex(x => x.id === id) + r) % 2;
+  setHTML($('#qbtns'), `<p class="qpick">Question ${r + 1} sur 2 : choisis celle qui fait avancer l’enquête.</p>` + (flip ? bad + good : good + bad));
+  f.innerHTML = '';
+}
+async function askBad(id, qi){
+  const s = SUS[id], b = s.qa[qi].bad;
+  S.wrong = S.wrong || {};
+  if (S.wrong[id + ':' + qi]) return;
+  S.wrong[id + ':' + qi] = 1; save();
+  track('question-piege', 'Question inutile posée');
+  $$('.qbtn').forEach(x => x.disabled = true);
+  const seq = newSeq();
+  const d = $('#dialog');
+  const q = document.createElement('div'); q.className = 'q'; q.textContent = fr(b.q); d.append(q);
+  const a = document.createElement('div'); a.className = 'a paper'; d.append(a);
+  try { q.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block:'start' }); } catch (e) {}
+  if (!REDUCED) skipBtn.hidden = false;
+  a.addEventListener('click', () => { seq.fast = true; });
+  await typeInto(a, b.a, seq, 22);
+  if (seq.cancel) return;
+  const c = document.createElement('div'); c.className = 'a cop'; setHTML(c, '<small>La commissaire</small><span></span>'); d.append(c);
+  await typeInto(c.querySelector('span'), b.cop, seq, 22);
+  if (seq.cancel) return;
+  skipBtn.hidden = true;
+  drawQButtons(id);
 }
 async function askQ(id, qi){
   const s = SUS[id];
@@ -1603,8 +1648,16 @@ async function shareCard(){
 /* =====================================================================
    ÉVÉNEMENTS (un seul écouteur, délégation)
    ===================================================================== */
+let DEADT = 0;
+function deadTap(e){
+  const sc = S.screen || '';
+  if (sc.indexOf('lieu:') !== 0 && sc !== 'bureau') return;
+  if (!screenEl.contains(e.target) || e.target.closest('.topbar,.lfoot,.intro-line,.lieu-head,a,button,input,label')) return;
+  const now = Date.now(); if (now - DEADT < 4000) return; DEADT = now;
+  showNote('Rien à voir ici. Touche seulement ce qui brille ✨', 'La commissaire');
+}
 document.addEventListener('click', e => {
-  const el = e.target.closest('[data-act]'); if (!el) return;
+  const el = e.target.closest('[data-act]'); if (!el) { deadTap(e); return; }
   const act = el.getAttribute('data-act'), arg = el.getAttribute('data-arg');
   if (act === 'cta') { track('checkpoint', 'Clic CHECKPOINT'); return; }
   if (act === 'spot' || act === 'pickSus' || act === 'pickClue') e.stopPropagation();
@@ -1633,6 +1686,7 @@ document.addEventListener('click', e => {
       if (arg === 'spam' && !S.spots['mail-tab-spam']) { S.spots['mail-tab-spam'] = 1; el.classList.remove('spot'); save(); }
       mailTab(arg); break;
     case 'ask': { const p = arg.split(':'); askQ(p[0], +p[1]); break; }
+    case 'askbad': { const p = arg.split(':'); askBad(p[0], +p[1]); break; }
     case 'pickClue': pickClue(arg); break;
     case 'pickSus': pickSus(arg); break;
     case 'accS': ACC.s = arg; { const y = window.scrollY; scrAccusation(); window.scrollTo(0, y); } break;
