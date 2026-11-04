@@ -109,13 +109,13 @@
 </style>
 
 <div id="fk"><div class="wrap">
- <p class="lab">⚡ Le labo de la Daronne</p>
- <h1>J'ai trouvé une astuce de dingue pour ma compta. 📂</h1>
+ <p class="lab">Le labo de la Daronne</p>
+ <h1>J'ai trouvé une astuce de dingue pour ma compta.</h1>
  <strong class="big" style="font-size:clamp(34px,10vw,58px);white-space:nowrap"><span>118</span> factures. <span>11</span> min.</strong>
- <p class="lead">Renommées et rangées dans mon Google Drive par Claude, pendant que je buvais mon café. (La vérif, je la fais après.) Voici mon prompt et toute la méthode, pas à pas. 😉</p>
+ <p class="lead">Renommées et rangées dans mon Google Drive par Claude. Les 11 minutes, c'est le temps de traitement&nbsp;; la vérification, je la fais après. Voici mon expérience, mon prompt et la méthode pour essayer de le reproduire chez toi.</p>
 
  <section>
-  <h2>Avant / après 🫠</h2>
+  <h2>Avant / après</h2>
   <p style="margin:-6px 0 14px;font-size:15px;color:var(--gris)">Mon vrai dossier, numéros et montants floutés.</p>
   <div class="ba">
    <div><div class="win"><div class="bar"><i style="background:#E0675A"></i><i style="background:#E8B64C"></i><i style="background:#62B867"></i><span>Compta › NON-CLASSÉE</span></div>
@@ -129,24 +129,33 @@
     <div class="row"><span class="ic or"></span>2026-002 2026-01-05 Fournisseur B ••,•• €.pdf</div>
     <div class="row"><span class="ic or"></span>2026-003 2026-01-09 Fournisseur C ••,•• €.pdf</div>
     <div class="row" style="color:var(--gris)"><span class="ic or"></span>… rangées par mois</div></div>
-    <p class="cap">Après : numéro, date, fournisseur, montant. Tout se retrouve.</p></div>
+    <p class="cap">Après : numéro de classement, date, fournisseur, montant.</p></div>
   </div>
  </section>
 
  <section>
-  <h2>Avant de commencer (une seule fois, 10 min) 🛠️</h2>
+  <h2>Ce qu'il te faut</h2>
+  <ul class="regles">
+   <li><span class="yes">✓</span><div>Un compte Claude (claude.ai ou l'application) et un compte Google.</div></li>
+   <li><span class="yes">✓</span><div>Le connecteur <strong>Google Drive</strong> : il permet à Claude de lire tes fichiers, de créer des dossiers et de déplacer des fichiers. Pour remplir le tableau, il faut en plus le connecteur <strong>Google Sheets</strong> (c'est un connecteur à part).</div></li>
+   <li><span class="yes">✓</span><div>Des factures en PDF avec du texte. Un scan flou ou une photo peut être mal lu&nbsp;: Claude doit alors le mettre de côté.</div></li>
+  </ul>
+  <p class="astuce">Je l'ai testé avec Google Drive et Google Sheets. C'est le parcours que je te montre, de bout en bout. Sur un compte Team ou Entreprise, c'est l'administrateur qui doit d'abord activer les connecteurs.</p>
+ </section>
+
+ <section>
+  <h2>La mise en place (une seule fois)</h2>
   <ol>
-   <li><b>01</b><span><strong>Crée ton dossier Compta</strong> dans Google Drive, avec un dossier de dépôt <strong>NON-CLASSÉE</strong> et tes dossiers de rangement.</span></li>
-   <li><b>02</b><span><strong>Crée ton tableau de suivi</strong> (Google Sheets ou Excel) avec les colonnes : numéro, date, fournisseur, montant, devise, catégorie, lien.</span></li>
-   <li><b>03</b><span><strong>Connecte Google Drive à Claude</strong> : dans Claude, va dans les connecteurs (Paramètres › Connecteurs) et autorise l'accès à ton Drive.</span></li>
-   <li><b>04</b><span><strong>Fais ton premier essai sur 5 factures</strong>, pour vérifier que tout se range comme prévu. Ensuite, tu lâches les 118. 😉</span></li>
+   <li><b>01</b><span><strong>Garde tes originaux à part.</strong> Ils restent là où tu les as reçus (mails, téléchargements, ou un dossier « Originaux » auquel tu ne demandes jamais à Claude de toucher). Dans NON-CLASSÉE, tu déposes des <strong>copies de travail</strong>.</span></li>
+   <li><b>02</b><span><strong>Crée ton dossier Compta</strong> dans Google Drive, avec NON-CLASSÉE et tes dossiers de rangement.</span></li>
+   <li><b>03</b><span><strong>Crée ton tableau de suivi</strong> dans Google Sheets, avec les colonnes : numéro, date, fournisseur, montant, devise, catégorie, lien.</span></li>
+   <li><b>04</b><span><strong>Connecte Google Drive et Google Sheets</strong> : dans Claude, va dans <strong>Personnaliser › Connecteurs</strong>, sélectionne le connecteur, puis connecte-toi à ton compte Google.</span></li>
+   <li><b>05</b><span><strong>Vérifie les autorisations.</strong> Par défaut, Claude te demande ton accord avant de déplacer un fichier. Garde ce réglage pour tes premiers essais. Tu pourras passer sur « Toujours autoriser » plus tard, dans les autorisations des outils du connecteur.</span></li>
   </ol>
-  <p class="astuce" style="margin:0 0 14px">Pas sur Google Drive&nbsp;? La méthode peut marcher avec un autre stockage, à condition que Claude puisse y accéder. Moi, je l'ai testée avec Google Drive, donc c'est ce que je te montre ici.</p>
   <div class="tree">📁 <b>Compta</b>
- ├─ 📥 <b>NON-CLASSÉE</b> ← dépôt
+ ├─ 📥 <b>NON-CLASSÉE</b> ← copies
  ├─ 📁 Dépenses
  │   ├─ 2026_01
- │   ├─ 2026_02
  │   └─ …
  ├─ 📁 Ventes
  │   └─ (par mois)
@@ -155,97 +164,88 @@
  </section>
 
  <section>
-  <h2>Ensuite, à chaque fois 🔁</h2>
+  <h2>Ensuite, à chaque fois</h2>
   <div class="flow">
-   <div class="moi"><span>1</span><p style="margin:0">Je dépose mes factures dans <strong>NON-CLASSÉE</strong>.<em>Téléchargées, scannées, reçues par mail : tout au même endroit.</em></p></div>
-   <div><span>2</span><p style="margin:0">Je colle mon prompt dans Claude.<em>Il liste les fichiers et attend mon OK.</em></p></div>
-   <div><span>3</span><p style="margin:0">Claude lit, renomme et range chaque facture.<em>Dans le dossier du bon mois, au bon format.</em></p></div>
-   <div><span>4</span><p style="margin:0">Il remplit le tableau et me fait le bilan.<em>Avec la liste de ce qu'il n'a pas osé toucher.</em></p></div>
-   <div class="moi"><span>5</span><p style="margin:0"><strong>Je vérifie</strong> les montants et les catégories.<em>C'est moi qui garde le contrôle.</em></p></div>
+   <div class="moi"><span>1</span><p style="margin:0">Je dépose des copies de mes factures dans <strong>NON-CLASSÉE</strong>.</p></div>
+   <div><span>2</span><p style="margin:0">Je colle mon prompt dans Claude, avec les connecteurs activés.<em>Il liste les fichiers et attend mon OK.</em></p></div>
+   <div><span>3</span><p style="margin:0">Claude lit, renomme et range chaque facture.<em>Ce qui est douteux reste dans NON-CLASSÉE.</em></p></div>
+   <div><span>4</span><p style="margin:0">Il remplit le tableau et me fait le bilan.<em>Avec la liste « À vérifier » et la raison pour chaque fichier.</em></p></div>
+   <div class="moi"><span>5</span><p style="margin:0"><strong>Je vérifie</strong> les montants et les catégories, et je traite la liste « À vérifier ».</p></div>
   </div>
-  <p class="astuce">Ce n'est pas une automatisation cachée : c'est une procédure que je relance quand mon dossier se remplit. Mais 11 minutes au lieu d'un dimanche soir, ça change la vie.</p>
+  <p class="astuce">Ce n'est pas une automatisation cachée&nbsp;: c'est une procédure que je relance quand mon dossier se remplit.</p>
  </section>
 
  <section>
-  <h2>À toi de jouer 📋</h2>
-  <ol><li><b>01</b>Tu copies le prompt.</li><li><b>02</b>Tu remplaces ce qui est entre [crochets] par tes noms de dossiers.</li><li><b>03</b>Tu le colles dans Claude et tu dis « OK » quand il a listé tes fichiers.</li></ol>
-  <button type="button" class="btn" data-copy>📋 Copier mon prompt COMPTA</button>
+  <h2>À toi de jouer</h2>
+  <ol><li><b>01</b><span>Tu copies le prompt et tu remplaces ce qui est entre [crochets].</span></li><li><b>02</b><span>Tu fais un premier essai sur <strong>3 copies de factures</strong>, pour vérifier que tout fonctionne chez toi.</span></li><li><b>03</b><span>Si le résultat est bon, tu traites ton dossier complet.</span></li></ol>
+  <button type="button" class="btn" data-copy>Copier mon prompt COMPTA</button>
   <p class="etat" aria-live="polite"></p>
 
   <details class="formule">
-   <summary>🧾 Le prompt COMPTA en entier</summary>
+   <summary>Le prompt COMPTA en entier</summary>
    <div class="fiche" id="fk-texte">Tu es mon assistant de rangement compta. Tu as accès à mon Google Drive.
 
 <b class="fk-h">MON DOSSIER</b>
-- Dossier principal : [Compta]
-- Dossier de dépôt : [Compta › NON-CLASSÉE]
+- Dossier de dépôt : [Compta › NON-CLASSÉE] (il ne contient que des copies de travail, mes originaux sont ailleurs)
 - Rangement : [Compta › Dépenses › AAAA_MM] pour mes factures d'achat, [Compta › Ventes › AAAA_MM] pour mes factures de vente
-- Tableau de suivi : [nom de ton tableau Google Sheets ou Excel]
+- Tableau de suivi : [nom de ton Google Sheets]
 
 <b class="fk-h">RÈGLES NON NÉGOCIABLES</b>
-- Tu ne supprimes jamais un fichier.
+- Tu ne supprimes jamais un fichier et tu ne le mets jamais à la corbeille.
 - Tu ne modifies jamais le contenu d'une facture.
 - Tu ne partages jamais un fichier et tu ne changes jamais ses droits d'accès.
-- Tu as seulement le droit de renommer et de déplacer les fichiers du dossier NON-CLASSÉE.
-- En cas de doute (montant illisible, date manquante, ce n'est pas une facture), tu ne touches pas au fichier : tu le laisses dans NON-CLASSÉE et tu me le signales.
+- Tu ne touches à aucun fichier en dehors du dossier NON-CLASSÉE. Tu as seulement le droit de renommer les fichiers de NON-CLASSÉE et de les déplacer vers les dossiers de rangement ci-dessus.
+- Tu ne devines jamais. Au moindre doute, tu laisses le fichier dans NON-CLASSÉE et tu le mets dans la liste « À vérifier ».
 
 <b class="fk-h">ÉTAPE 1 · TU LISTES</b>
 Liste les fichiers du dossier NON-CLASSÉE et dis-moi combien il y en a. Attends mon « OK » avant de toucher à quoi que ce soit.
 
 <b class="fk-h">ÉTAPE 2 · TU LIS CHAQUE FACTURE</b>
 Pour chaque fichier, relève : la date de la facture, le fournisseur (ou le client pour une vente), le montant TTC, la devise, et s'il s'agit d'une dépense ou d'une vente.
+Mets directement dans « À vérifier », sans le renommer ni le déplacer, tout fichier qui est :
+- illisible ou en partie illisible (scan flou, image) ;
+- un avoir, un remboursement ou un devis ;
+- une facture avec plusieurs montants possibles ou une devise que tu ne reconnais pas ;
+- un document qui n'est pas une facture ;
+- un doublon probable : même fournisseur, même date et même montant qu'une facture déjà présente dans le tableau ou dans les dossiers.
 
 <b class="fk-h">ÉTAPE 3 · TU RENOMMES</b>
 Format : AAAA-NNN AAAA-MM-JJ Fournisseur Montant Devise.pdf
-- AAAA-NNN = le numéro dans l'ordre chronologique, à la suite du dernier numéro déjà utilisé cette année (2026-001, 2026-002…).
+- AAAA-NNN est un numéro de classement interne, pas le numéro légal de la facture.
+- Avant de numéroter, regarde le plus grand numéro déjà utilisé cette année (dans le tableau et dans les noms de fichiers) et continue à partir du suivant. N'utilise jamais un numéro déjà pris.
 - Exemple : 2026-014 2026-03-12 Canva 11,99 EUR.pdf
 
 <b class="fk-h">ÉTAPE 4 · TU RANGES</b>
-Déplace chaque facture dans le dossier du mois de sa date. Si le dossier du mois n'existe pas encore, crée-le.
+Déplace chaque facture dans le dossier du mois de sa date. Si le dossier du mois n'existe pas encore, crée-le à l'intérieur du bon dossier de rangement.
 
 <b class="fk-h">ÉTAPE 5 · TU METS À JOUR LE TABLEAU</b>
-Ajoute une ligne par facture : numéro, date, fournisseur, montant, devise, catégorie (dépense ou vente) et le lien vers le fichier.
+Si tu as accès à mon Google Sheets, ajoute une ligne par facture rangée : numéro, date, fournisseur, montant, devise, catégorie (dépense ou vente), lien vers le fichier. N'ajoute jamais une ligne qui existe déjà.
+Si tu n'y as pas accès, donne-moi ces lignes dans un tableau que je pourrai copier-coller.
 
 <b class="fk-h">ÉTAPE 6 · TU ME FAIS LE BILAN</b>
 - Combien de factures tu as renommées et rangées.
-- La liste de celles laissées dans NON-CLASSÉE, et pourquoi.
-- Les montants sur lesquels tu as eu un doute, pour que je les vérifie.
+- La liste « À vérifier », avec pour chaque fichier la raison.
+- Les montants sur lesquels tu as eu un doute.
 
 Je vérifie toujours les montants et les catégories derrière toi.</div>
-   <button type="button" class="btn" data-copy>📋 Copier mon prompt COMPTA</button>
+   <button type="button" class="btn" data-copy>Copier mon prompt COMPTA</button>
    <p class="etat" aria-live="polite" style="margin:-8px 16px 14px"></p>
   </details>
  </section>
 
  <section class="chute">
-  <h2>Le petit détail important 🔐</h2>
+  <h2>Le petit détail important</h2>
   <p>Je ne lui ai pas donné carte blanche non plus.</p>
   <ul class="regles">
-   <li><span class="no">✕</span>Les originaux&nbsp;? On n'y touche pas : jamais supprimés, jamais modifiés.</li>
-   <li><span class="no">✕</span>Partager une facture&nbsp;? Jamais.</li>
-   <li><span class="yes">✓</span>Les montants et les catégories&nbsp;? Je contrôle derrière.</li>
-   <li><span class="yes">✓</span>Les données sensibles&nbsp;? Je les garde hors du dossier.</li>
+   <li><span class="no">✕</span><div>Les originaux&nbsp;? Ils restent à part. Claude ne travaille que sur des copies.</div></li>
+   <li><span class="no">✕</span><div>Supprimer, modifier ou partager une facture&nbsp;? Jamais.</div></li>
+   <li><span class="yes">✓</span><div>Les montants et les catégories&nbsp;? Je contrôle derrière.</div></li>
+   <li><span class="yes">✓</span><div>Les données sensibles&nbsp;? Une facture en contient (noms, adresses, montants). Quand le connecteur est activé, Claude peut lire ce à quoi ton compte Google a accès. Fais tes essais sur des copies anonymisées et ne connecte que le compte nécessaire.</div></li>
   </ul>
-  <p>Et un prompt ne garantit pas tout&nbsp;: commence petit et vérifie. Claude fait le rangement. Moi, je garde le contrôle. 😉</p>
+  <p>Un prompt pose des règles, il ne garantit pas tout. Claude fait le rangement. Moi, je garde le contrôle.</p>
  </section>
 
- <section class="offre o-kit" aria-labelledby="fk-kit">
-  <div class="offre-img"><img src="https://d1yei2z3i6k35z.cloudfront.net/18198227/6ad1d38b63f8f5.59060179_reseaux-carre-maquettes.png" alt="Le Kit contenu : ton calendrier de 30 jours et ta fiche marque" loading="lazy"></div>
-  <div class="offre-txt">
-   <h2 id="fk-kit">Et ton contenu, on le range aussi&nbsp;? ✨</h2>
-   <p>En une soirée, tu sais quoi poster pendant 30 jours. Sujet, format, accroche&nbsp;: tout est tiré de TON métier. 😉</p>
-   <a class="btn" href="https://www.chez-ladaronne.com/kit-contenu">Je découvre le kit →</a>
-  </div>
- </section>
- <section class="offre o-biz" aria-labelledby="fk-biz">
-  <div class="offre-img"><img src="https://d1yei2z3i6k35z.cloudfront.net/18198227/6aca6686727e80.15982814_mockup-carre.png" alt="Le Kit business, guide gratuit" loading="lazy"></div>
-  <div class="offre-txt">
-   <h2 id="fk-biz">🎁 Ton Kit business offert</h2>
-   <p>Ton offre, un contenu qui vend, ton tunnel et les chiffres à suivre. Que tu te lances ou que ça tourne déjà.</p>
-   <a class="btn" href="https://www.chez-ladaronne.com/kit-business">Je le récupère →</a>
-  </div>
- </section>
-
+ <p class="sign" style="margin-top:30px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--gris)">Envie de récupérer du temps ailleurs aussi&nbsp;? Mon <a href="https://www.chez-ladaronne.com/kit-business" style="color:var(--vert);font-weight:700">Kit business</a> est offert.</p>
  <p class="sign">À très vite 🌸<br>Anaïs | La Daronne<small>@chez.ladaronne</small></p>
 </div></div>
 
@@ -254,7 +254,7 @@ Je vérifie toujours les montants et les catégories derrière toi.</div>
  var txt=document.getElementById('fk-texte');
  document.querySelectorAll('#fk [data-copy]').forEach(function(btn){
   var etat=btn.nextElementSibling;
-  function ok(){btn.textContent='Copié ✓';btn.classList.add('ok');etat.textContent='Colle-le maintenant dans Claude, avec Google Drive connecté.';setTimeout(function(){btn.textContent='📋 Copier mon prompt COMPTA';btn.classList.remove('ok');},2500);}
+  function ok(){btn.textContent='Copié ✓';btn.classList.add('ok');etat.textContent='Colle-le dans Claude, avec Google Drive et Google Sheets activés.';setTimeout(function(){btn.textContent='Copier mon prompt COMPTA';btn.classList.remove('ok');},2500);}
   function secours(){var d=txt.closest('details');if(d)d.open=true;var r=document.createRange();r.selectNodeContents(txt);var s=window.getSelection();s.removeAllRanges();s.addRange(r);etat.textContent='Le prompt est sélectionné : fais Copier (appui long sur téléphone).';}
   btn.addEventListener('click',function(){try{navigator.clipboard.writeText(txt.textContent).then(ok,secours);}catch(e){secours();}});
  });
