@@ -55,11 +55,11 @@
 #fk .chute p:last-child{margin:0}
 #fk .sign{margin:34px 0 0;text-align:center;font-family:'Kalam',cursive;font-size:21px;line-height:1.35;color:var(--vert)}
 #fk .sign small{display:block;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--gris)}
-#fk .win{background:#fff;border:1px solid var(--bord);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(11,85,93,.08)}
+#fk .ba>div{display:flex;flex-direction:column}#fk .ba>div>.win{flex:1}#fk .win{background:#fff;border:1px solid var(--bord);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(11,85,93,.08)}
 #fk .win .bar{display:flex;align-items:center;gap:6px;padding:9px 12px;border-bottom:1px solid var(--bord);font-size:12.5px;color:var(--gris)}
 #fk .win .bar i{width:9px;height:9px;border-radius:50%;display:inline-block}
 #fk .win .bar span{flex:1;text-align:center;margin-right:30px}
-#fk .row{display:flex;gap:10px;align-items:center;padding:9px 12px;font-size:13.5px;border-bottom:1px solid #F2EBDF;overflow-wrap:anywhere}
+#fk .row{display:flex;gap:8px;align-items:center;padding:10px 12px;font-size:12.5px;border-bottom:1px solid #F2EBDF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #fk .row:last-child{border:0}
 #fk .ic{width:13px;height:16px;border-radius:3px;flex:none;background:#CFC8BC}
 #fk .ic.or{background:var(--or)}
@@ -109,7 +109,7 @@
 </style>
 
 <div id="fk"><div class="wrap">
- <p class="lab">⚡ Le labo de la Daronne · Astuce n°1</p>
+ <p class="lab">⚡ Le labo de la Daronne</p>
  <h1>J'ai trouvé une astuce de dingue pour ma compta. 📂</h1>
  <strong class="big" style="font-size:clamp(34px,10vw,58px);white-space:nowrap"><span>118</span> factures. <span>11</span> min.</strong>
  <p class="lead">Renommées et rangées dans mon Google Drive par Claude, pendant que je buvais mon café. (La vérif, je la fais après.) Voici mon prompt et toute la méthode, pas à pas. 😉</p>
@@ -125,9 +125,9 @@
     <div class="row" style="color:var(--gris)"><span class="ic"></span>+ 115 autres…</div></div>
     <p class="cap">Avant : bonne chance pour retrouver la facture Canva de mars.</p></div>
    <div><div class="win"><div class="bar"><i style="background:#E0675A"></i><i style="background:#E8B64C"></i><i style="background:#62B867"></i><span>Compta › Dépenses › 2026_01</span></div>
-    <div class="row"><span class="ic or"></span>2026-001 2026-01-02 Fournisseur A ••,•• EUR.pdf</div>
-    <div class="row"><span class="ic or"></span>2026-002 2026-01-05 Fournisseur B ••,•• EUR.pdf</div>
-    <div class="row"><span class="ic or"></span>2026-003 2026-01-09 Fournisseur C ••,•• EUR.pdf</div>
+    <div class="row"><span class="ic or"></span>2026-001 2026-01-02 Fournisseur A ••,•• €.pdf</div>
+    <div class="row"><span class="ic or"></span>2026-002 2026-01-05 Fournisseur B ••,•• €.pdf</div>
+    <div class="row"><span class="ic or"></span>2026-003 2026-01-09 Fournisseur C ••,•• €.pdf</div>
     <div class="row" style="color:var(--gris)"><span class="ic or"></span>… rangées par mois</div></div>
     <p class="cap">Après : numéro, date, fournisseur, montant. Tout se retrouve.</p></div>
   </div>
@@ -139,8 +139,9 @@
    <li><b>01</b><span><strong>Crée ton dossier Compta</strong> dans Google Drive, avec un dossier de dépôt <strong>NON-CLASSÉE</strong> et tes dossiers de rangement.</span></li>
    <li><b>02</b><span><strong>Crée ton tableau de suivi</strong> (Google Sheets ou Excel) avec les colonnes : numéro, date, fournisseur, montant, devise, catégorie, lien.</span></li>
    <li><b>03</b><span><strong>Connecte Google Drive à Claude</strong> : dans Claude, va dans les connecteurs (Paramètres › Connecteurs) et autorise l'accès à ton Drive.</span></li>
-   <li><b>04</b><span><strong>Fais une copie de sauvegarde</strong> de tes factures avant le tout premier essai. On n'est jamais trop prudente. 😉</span></li>
+   <li><b>04</b><span><strong>Fais ton premier essai sur 5 factures</strong>, pour vérifier que tout se range comme prévu. Ensuite, tu lâches les 118. 😉</span></li>
   </ol>
+  <p class="astuce" style="margin:0 0 14px">Pas sur Google Drive&nbsp;? La méthode peut marcher avec un autre stockage, à condition que Claude puisse y accéder. Moi, je l'ai testée avec Google Drive, donc c'est ce que je te montre ici.</p>
   <div class="tree">📁 <b>Compta</b>
  ├─ 📥 <b>NON-CLASSÉE</b> ← dépôt
  ├─ 📁 Dépenses
@@ -225,7 +226,7 @@ Je vérifie toujours les montants et les catégories derrière toi.</div>
    <li><span class="yes">✓</span>Les montants et les catégories&nbsp;? Je contrôle derrière.</li>
    <li><span class="yes">✓</span>Les données sensibles&nbsp;? Je les garde hors du dossier.</li>
   </ul>
-  <p>Et un prompt ne garantit pas tout&nbsp;: garde une sauvegarde et vérifie. Claude fait le rangement. Moi, je garde le contrôle. 😉</p>
+  <p>Et un prompt ne garantit pas tout&nbsp;: commence petit et vérifie. Claude fait le rangement. Moi, je garde le contrôle. 😉</p>
  </section>
 
  <section class="offre o-kit" aria-labelledby="fk-kit">
