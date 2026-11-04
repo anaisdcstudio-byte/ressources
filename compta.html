@@ -139,17 +139,17 @@
    <li><span class="yes">✓</span><div>Claude avec le <strong>connecteur Google Drive</strong>. Il est disponible aussi sur l'offre gratuite. Il permet à Claude de lire tes fichiers, de créer des dossiers et de déplacer des fichiers, en te demandant ton accord.</div></li>
    <li><span class="yes">✓</span><div>Pour que Claude remplisse le tableau lui-même&nbsp;: le <strong>connecteur Google Sheets</strong>. C'est un connecteur à part, en version bêta, réservé aux offres payantes. Sans lui, Claude te donne les lignes à copier-coller dans ton tableau.</div></li>
   </ul>
-  <p class="astuce">Vérifie ce que ton offre Claude permet avant de lancer ton dossier complet. Sur l'offre gratuite, les limites d'utilisation peuvent t'obliger à traiter tes factures en plusieurs fois. Sur un compte Team ou Entreprise, c'est l'administrateur qui doit d'abord activer les connecteurs.</p>
+  <p class="astuce">Certaines fonctionnalités peuvent dépendre de ton offre et des autorisations accordées&nbsp;: vérifie ce que ton offre Claude permet avant de lancer ton dossier complet. Sur l'offre gratuite, les limites d'utilisation peuvent t'obliger à traiter tes factures en plusieurs fois. Sur un compte Team ou Entreprise, c'est l'administrateur qui doit d'abord activer les connecteurs.</p>
  </section>
 
  <section>
   <h2>La mise en place (une seule fois)</h2>
   <ol>
-   <li><b>01</b><span><strong>Garde tes originaux à part.</strong> Ils restent là où tu les as reçus (mails, téléchargements, ou un dossier « Originaux » auquel tu ne demandes jamais à Claude de toucher). Dans NON-CLASSÉE, tu déposes des <strong>copies de travail</strong>.</span></li>
-   <li><b>02</b><span><strong>Crée ton dossier Compta</strong> dans Google Drive, avec NON-CLASSÉE et tes dossiers de rangement.</span></li>
-   <li><b>03</b><span><strong>Crée ton tableau de suivi</strong> dans Google Sheets, avec les colonnes : numéro de classement, date, n° de facture, fournisseur, montant, devise, catégorie, lien.</span></li>
-   <li><b>04</b><span><strong>Connecte Google Drive</strong> (et Google Sheets si ton offre le permet) : dans Claude, va dans <strong>Personnaliser › Connecteurs</strong>, sélectionne le connecteur, puis connecte-toi à ton compte Google.</span></li>
-   <li><b>05</b><span><strong>Garde la validation des actions.</strong> Par défaut, Claude te demande ton accord avant de déplacer un fichier. Pour des documents comptables, garde ce réglage&nbsp;: c'est ta sécurité.</span></li>
+   <li><b>01</b> <span><strong>Garde tes originaux à part.</strong> Ils restent là où tu les as reçus (mails, téléchargements, ou un dossier « Originaux » auquel tu ne demandes jamais à Claude de toucher). Dans NON-CLASSÉE, tu déposes des <strong>copies de travail</strong>.</span></li>
+   <li><b>02</b> <span><strong>Crée ton dossier Compta</strong> dans Google Drive, avec NON-CLASSÉE et tes dossiers de rangement.</span></li>
+   <li><b>03</b> <span><strong>Crée ton tableau de suivi</strong> dans Google Sheets, avec les colonnes : numéro de classement, date, n° de facture, fournisseur, montant, devise, catégorie, lien.</span></li>
+   <li><b>04</b> <span><strong>Connecte Google Drive</strong> (et Google Sheets si ton offre le permet) : dans Claude, va dans <strong>Personnaliser › Connecteurs</strong>, sélectionne le connecteur, puis connecte-toi à ton compte Google.</span></li>
+   <li><b>05</b> <span><strong>Garde la validation des actions.</strong> Par défaut, Claude te demande ton accord avant de déplacer un fichier. Pour des documents comptables, garde ce réglage&nbsp;: c'est ta sécurité.</span></li>
   </ol>
   <div class="tree">📁 <b>Compta</b>
  ├─ 📥 <b>NON-CLASSÉE</b> ← copies
@@ -168,7 +168,7 @@
    <div class="moi"><span>1</span><p style="margin:0">Je dépose des copies de mes factures dans <strong>NON-CLASSÉE</strong>.</p></div>
    <div><span>2</span><p style="margin:0">Je colle mon prompt dans Claude, avec le connecteur activé.<em>Il liste les fichiers et attend mon OK.</em></p></div>
    <div><span>3</span><p style="margin:0">Claude lit, renomme et range chaque facture.<em>Ce qui est douteux reste dans NON-CLASSÉE.</em></p></div>
-   <div><span>4</span><p style="margin:0">Il remplit le tableau et me fait le bilan.<em>Avec la liste « À vérifier » et la raison pour chaque fichier.</em></p></div>
+   <div><span>4</span><p style="margin:0">Il complète mon Google Sheets ou me prépare les lignes à copier-coller, puis me fait le bilan.<em>Avec la liste « À vérifier » et la raison pour chaque fichier.</em></p></div>
    <div class="moi"><span>5</span><p style="margin:0"><strong>Je vérifie</strong> les montants et les catégories, et je traite la liste « À vérifier ».</p></div>
   </div>
   <p class="astuce">Ce n'est pas une automatisation cachée&nbsp;: c'est une procédure que je relance quand mon dossier se remplit.</p>
@@ -176,7 +176,7 @@
 
  <section>
   <h2>À toi de jouer</h2>
-  <ol><li><b>01</b><span>Tu copies le prompt et tu remplaces ce qui est entre [crochets].</span></li><li><b>02</b><span>Tu fais un premier essai sur <strong>3 copies de factures</strong>, pour vérifier que tout fonctionne chez toi.</span></li><li><b>03</b><span>Si le résultat est bon, tu traites ton dossier complet.</span></li></ol>
+  <ol><li><b>01</b> <span>Tu copies le prompt et tu remplaces ce qui est entre [crochets].</span></li><li><b>02</b> <span>Tu fais un premier essai sur <strong>3 copies de factures</strong>, pour vérifier que tout fonctionne chez toi.</span></li><li><b>03</b> <span>Tu vérifies les fichiers déplacés, leurs nouveaux noms, les lignes et les liens du tableau, et les montants. Si tout est bon, tu traites ton dossier complet.</span></li></ol>
   <button type="button" class="btn" data-copy>Copier mon prompt COMPTA</button>
   <p class="etat" aria-live="polite"></p>
 
@@ -197,6 +197,13 @@
 - Tu peux consulter les dossiers de rangement et le tableau pour vérifier les doublons et la numérotation, mais tu ne renommes, ne déplaces et ne renumérotes jamais une facture déjà classée.
 - Tu ne devines jamais. Au moindre doute, tu laisses le fichier dans NON-CLASSÉE et tu le mets dans la liste « À vérifier ».
 
+<b class="fk-h">SUIVI DES OPÉRATIONS</b>
+- Avant de modifier les fichiers, présente-moi le plan de classement (ancien nom, nouveau nom, dossier de destination) et attends ma validation.
+- Traite ensuite les factures par petits lots.
+- Après chaque lot, vérifie quels fichiers ont réellement été déplacés et quelles lignes ont été ajoutées au tableau.
+- Si une opération échoue, signale-la. Ne recommence jamais automatiquement une opération sans vérifier si elle a déjà réussi.
+- Si on reprend après une interruption, commence par vérifier ce qui a déjà été fait (fichiers rangés, lignes du tableau) avant de continuer.
+
 <b class="fk-h">ÉTAPE 1 · TU LISTES</b>
 Liste les fichiers du dossier NON-CLASSÉE et dis-moi combien il y en a. Attends mon « OK » avant de toucher à quoi que ce soit.
 
@@ -207,7 +214,7 @@ Mets directement dans « À vérifier », sans le renommer ni le déplacer, tout
 - un avoir, un remboursement ou un devis ;
 - une facture avec plusieurs montants possibles ou une devise que tu ne reconnais pas ;
 - un document qui n'est pas une facture ;
-- un document qui semble déjà traité : même numéro de facture qu'une facture déjà classée ou déjà présente dans le tableau, ou à défaut, même fournisseur, même date et même montant.
+- un doublon probable : même fournisseur ET même numéro de facture qu'une facture déjà classée ou déjà présente dans le tableau. Si le numéro est absent, compare le fournisseur, la date et le montant. En cas de doute, laisse le document dans NON-CLASSÉE.
 
 <b class="fk-h">ÉTAPE 3 · TU RENOMMES</b>
 Format : AAAA-NNN AAAA-MM-JJ Fournisseur Montant Devise.pdf
