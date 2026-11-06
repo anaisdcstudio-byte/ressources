@@ -77,6 +77,15 @@
 #fk .regles li span{flex:none;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
 #fk .no{background:#C96A5A;color:#fff}#fk .yes{background:var(--or);color:var(--vert-f)}
 #fk .astuce{margin:14px 0 0;padding:12px 14px;border-left:4px solid var(--or);background:#F6EFE3;border-radius:0 10px 10px 0;font-size:15px}
+#fk .xl{background:#fff;border:1px solid var(--bord);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(11,85,93,.08)}
+#fk .xl .bar{display:flex;align-items:center;gap:8px;padding:9px 12px;background:#1D6F42;color:#fff;font-size:13px;font-weight:700}
+#fk .xl .bar b{background:#fff;color:#1D6F42;border-radius:3px;padding:0 5px;font-size:12px}
+#fk .xl table{width:100%;border-collapse:collapse;font-size:12px}
+#fk .xl th{background:#00525B;color:#FFF7EA;text-align:left;padding:7px 8px;font-weight:700;white-space:nowrap}
+#fk .xl td{padding:7px 8px;border-top:1px solid #EDE6DA;white-space:nowrap}
+#fk .xl tr:nth-child(even) td{background:#F6EFE3}
+#fk .xl .scroll{overflow-x:auto}
+#fk .dl{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:11px 16px;border-radius:10px;background:#fff;border:1.5px solid var(--vert);color:var(--vert);font-weight:700;text-decoration:none;font-size:15px}
 #fk :focus-visible{outline:3px solid var(--vert);outline-offset:3px}
 @media (min-width:600px){#fk .wrap{padding:44px 24px 34px}#fk .ba{grid-template-columns:1fr 1fr}}
 #fk .offre{display:flex;gap:16px;align-items:center;margin:16px 0 0;padding:16px;border-radius:14px}
@@ -150,7 +159,7 @@
   <ol>
    <li><b>01</b> <span><strong>Garde tes originaux à part.</strong> Ils restent là où tu les as reçus&nbsp;: mails, téléchargements, ou un dossier «&nbsp;Originaux&nbsp;» auquel Claude ne touche jamais.<br>Dans NON-CLASSÉE, tu déposes seulement des <strong>copies de travail</strong>.</span></li>
    <li><b>02</b> <span><strong>Crée ton dossier Compta</strong> dans Google Drive, avec NON-CLASSÉE et tes dossiers de rangement.</span></li>
-   <li><b>03</b> <span><strong>Pas besoin de créer ton tableau.</strong> La première fois, Claude crée le fichier Excel de suivi (numéro de classement, date, n° de facture, fournisseur, montant, devise, catégorie, lien). Les fois suivantes, il le complète.</span></li>
+   <li><b>03</b> <span><strong>Ton tableau de suivi&nbsp;:</strong> télécharge mon modèle Excel plus bas et dépose-le dans ton dossier Compta, ou laisse Claude le créer la première fois (numéro de classement, date, n° de facture, fournisseur, montant, devise, catégorie, lien). Les fois suivantes, il le complète.</span></li>
    <li><b>04</b> <span><strong>Connecte Google Drive</strong> : dans Claude, va dans <strong>Personnaliser › Connecteurs</strong>, sélectionne le connecteur, puis connecte-toi à ton compte Google.</span></li>
    <li><b>05</b> <span><strong>Garde la validation des actions.</strong> Par défaut, Claude te demande ton accord avant de déplacer un fichier. Pour des documents comptables, garde ce réglage&nbsp;: c'est ta sécurité.</span></li>
   </ol>
@@ -177,6 +186,21 @@
   <p class="astuce">Pas de magie, pas de code&nbsp;: juste une petite routine que je relance quand mon dossier se remplit.</p>
  </section>
 
+
+ <section>
+  <h2>Le tableau que Claude me sort</h2>
+  <p>À chaque rangement, Claude complète ce fichier Excel dans mon Drive. Une ligne par facture, avec le lien direct vers le PDF. Exemple avec des factures fictives&nbsp;:</p>
+  <div class="xl"><div class="bar"><b>X</b> Suivi factures.xlsx</div><div class="scroll"><table>
+   <tr><th>N° classement</th><th>Date</th><th>N° facture</th><th>Fournisseur</th><th>Montant</th><th>Devise</th><th>Catégorie</th><th>Lien</th><th>À vérifier&nbsp;?</th></tr>
+   <tr><td>2026-086</td><td>08/10/2026</td><td>INV-58213</td><td>Fournisseur A</td><td>17,00</td><td>EUR</td><td>Dépense</td><td>📎 PDF</td><td></td></tr>
+   <tr><td>2026-087</td><td>09/10/2026</td><td>F-2026-114</td><td>Fournisseur B</td><td>21,00</td><td>EUR</td><td>Dépense</td><td>📎 PDF</td><td></td></tr>
+   <tr><td>2026-088</td><td>12/10/2026</td><td>3041-0001</td><td>Fournisseur C</td><td>20,00</td><td>USD</td><td>Dépense</td><td>📎 PDF</td><td></td></tr>
+   <tr><td>2026-089</td><td>14/10/2026</td><td>C-00412</td><td>Cliente D</td><td>390,00</td><td>EUR</td><td>Vente</td><td>📎 PDF</td><td>Montant à confirmer</td></tr>
+  </table></div></div>
+  <p class="cap">Sur téléphone, fais glisser le tableau pour voir toutes les colonnes.</p>
+  <a class="dl" href="fichiers/modele-suivi-factures.xlsx" download>⬇ Télécharger mon modèle Excel</a>
+  <p class="cap" style="margin-top:8px">Les lignes d'exemple sont fictives&nbsp;: supprime-les avant ton premier rangement, ou laisse Claude créer le sien.</p>
+ </section>
  <section>
   <h2>À toi de jouer</h2>
   <ol><li><b>01</b> <span>Tu copies le prompt et tu remplaces ce qui est entre [crochets].</span></li><li><b>02</b> <span>Tu fais d'abord un essai sur <strong>3 copies de factures</strong>, pour voir si tout marche bien chez toi. On teste petit avant de tout lancer 😉</span></li><li><b>03</b> <span>Tu vérifies les fichiers déplacés, leurs nouveaux noms, les lignes et les liens du tableau, et les montants. Si tout est bon, tu traites ton dossier complet.</span></li></ol>
