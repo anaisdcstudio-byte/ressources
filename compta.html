@@ -140,7 +140,7 @@
   <ul class="regles">
    <li><span class="yes">✓</span><div>Tes factures en PDF dans <strong>Google Drive</strong>, de préférence des PDF avec du texte. Un scan flou ou une photo peut être mal lu&nbsp;: Claude doit alors le mettre de côté.</div></li>
    <li><span class="yes">✓</span><div>Claude avec le <strong>connecteur Google Drive</strong>. Il est disponible aussi sur l'offre gratuite. Il permet à Claude de lire tes fichiers, de créer des dossiers et de déplacer des fichiers, en te demandant ton accord.</div></li>
-   <li><span class="yes">✓</span><div>Pour que Claude remplisse le tableau lui-même&nbsp;: le <strong>connecteur Google Sheets</strong>. C'est un connecteur à part, en version bêta, réservé aux offres payantes. Sans lui, Claude te donne les lignes à copier-coller dans ton tableau.</div></li>
+   <li><span class="yes">✓</span><div>Pour le tableau de suivi&nbsp;: rien à installer. Claude crée lui-même un <strong>fichier Excel</strong> avec une ligne par facture, et l'enregistre dans ton Drive. Pour ça, la création de fichiers doit être activée dans les réglages de Claude.</div></li>
   </ul>
   <p class="astuce">Certaines fonctionnalités dépendent de ton offre et des autorisations accordées&nbsp;: vérifie ce que ton offre Claude permet avant de lancer ton dossier complet.<br><br>Sur l'offre gratuite, les limites d'utilisation peuvent t'obliger à traiter tes factures en plusieurs fois.<br><br>Sur un compte Team ou Entreprise, c'est l'administrateur qui doit d'abord activer les connecteurs.</p>
  </section>
@@ -150,8 +150,8 @@
   <ol>
    <li><b>01</b> <span><strong>Garde tes originaux à part.</strong> Ils restent là où tu les as reçus&nbsp;: mails, téléchargements, ou un dossier «&nbsp;Originaux&nbsp;» auquel Claude ne touche jamais.<br>Dans NON-CLASSÉE, tu déposes seulement des <strong>copies de travail</strong>.</span></li>
    <li><b>02</b> <span><strong>Crée ton dossier Compta</strong> dans Google Drive, avec NON-CLASSÉE et tes dossiers de rangement.</span></li>
-   <li><b>03</b> <span><strong>Crée ton tableau de suivi</strong> dans Google Sheets, avec les colonnes : numéro de classement, date, n° de facture, fournisseur, montant, devise, catégorie, lien.</span></li>
-   <li><b>04</b> <span><strong>Connecte Google Drive</strong> (et Google Sheets si ton offre le permet) : dans Claude, va dans <strong>Personnaliser › Connecteurs</strong>, sélectionne le connecteur, puis connecte-toi à ton compte Google.</span></li>
+   <li><b>03</b> <span><strong>Pas besoin de créer ton tableau.</strong> La première fois, Claude crée le fichier Excel de suivi (numéro de classement, date, n° de facture, fournisseur, montant, devise, catégorie, lien). Les fois suivantes, il le complète.</span></li>
+   <li><b>04</b> <span><strong>Connecte Google Drive</strong> : dans Claude, va dans <strong>Personnaliser › Connecteurs</strong>, sélectionne le connecteur, puis connecte-toi à ton compte Google.</span></li>
    <li><b>05</b> <span><strong>Garde la validation des actions.</strong> Par défaut, Claude te demande ton accord avant de déplacer un fichier. Pour des documents comptables, garde ce réglage&nbsp;: c'est ta sécurité.</span></li>
   </ol>
   <div class="tree">📁 <b>Compta</b>
@@ -171,7 +171,7 @@
    <div class="moi"><span>1</span><p style="margin:0">Je dépose des copies de mes factures dans <strong>NON-CLASSÉE</strong>.</p></div>
    <div><span>2</span><p style="margin:0">Je colle mon prompt dans Claude, avec le connecteur activé.<em>Il liste les fichiers et attend mon OK.</em></p></div>
    <div><span>3</span><p style="margin:0">Claude lit, renomme et range chaque facture.<em>Ce qui est douteux reste dans NON-CLASSÉE.</em></p></div>
-   <div><span>4</span><p style="margin:0">Il complète mon Google Sheets ou me prépare les lignes à copier-coller, puis me fait le bilan.<em>Avec la liste «&nbsp;À vérifier&nbsp;» et la raison pour chaque fichier.</em></p></div>
+   <div><span>4</span><p style="margin:0">Il met à jour mon tableau Excel dans le Drive, puis me fait le bilan.<em>Avec la liste «&nbsp;À vérifier&nbsp;» et la raison pour chaque fichier.</em></p></div>
    <div class="moi"><span>5</span><p style="margin:0"><strong>Je vérifie</strong> les montants et les catégories, et je traite la liste «&nbsp;À vérifier&nbsp;».</p></div>
   </div>
   <p class="astuce">Pas de magie, pas de code&nbsp;: juste une petite routine que je relance quand mon dossier se remplit.</p>
@@ -190,7 +190,7 @@
 <b class="fk-h">MON DOSSIER</b>
 - Dossier de dépôt : [Compta › NON-CLASSÉE] (il ne contient que des copies de travail, mes originaux sont ailleurs)
 - Rangement : [Compta › Dépenses › AAAA_MM] pour mes factures d'achat, [Compta › Ventes › AAAA_MM] pour mes factures de vente
-- Tableau de suivi : [nom de ton Google Sheets]
+- Tableau de suivi : [Compta › Suivi factures.xlsx] (crée-le s'il n'existe pas encore)
 
 <b class="fk-h">RÈGLES NON NÉGOCIABLES</b>
 - Tu ne supprimes jamais un fichier et tu ne le mets jamais à la corbeille.
@@ -230,8 +230,8 @@ Format : AAAA-NNN AAAA-MM-JJ Fournisseur Montant Devise.pdf
 Déplace chaque facture dans le dossier du mois de sa date. Si le dossier du mois n'existe pas encore, crée-le à l'intérieur du bon dossier de rangement.
 
 <b class="fk-h">ÉTAPE 5 · TU METS À JOUR LE TABLEAU</b>
-Si tu as accès à mon Google Sheets, ajoute une ligne par facture rangée : numéro de classement, date, numéro de facture du fournisseur, fournisseur, montant, devise, catégorie (dépense ou vente), lien vers le fichier. N'ajoute jamais une ligne qui existe déjà.
-Si tu n'y as pas accès, donne-moi ces lignes dans un tableau que je pourrai copier-coller.
+Mets à jour mon fichier Excel de suivi (ou crée-le la première fois) : une ligne par facture rangée : numéro de classement, date, numéro de facture du fournisseur, fournisseur, montant, devise, catégorie (dépense ou vente), lien vers le fichier. N'ajoute jamais une ligne qui existe déjà. Enregistre le fichier dans mon Drive, à l'emplacement indiqué.
+Si tu ne peux pas l'enregistrer dans mon Drive, donne-moi le fichier à télécharger.
 
 <b class="fk-h">ÉTAPE 6 · TU ME FAIS LE BILAN</b>
 - Combien de factures tu as renommées et rangées.
