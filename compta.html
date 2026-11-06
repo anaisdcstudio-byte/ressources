@@ -31,7 +31,7 @@
 #fk .ap{background:var(--vert);color:var(--creme)}
 #fk .tag{display:block;margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
 #fk .ap .tag{color:var(--or)}
-#fk .card q{font-variant-numeric:lining-nums;display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:24px;line-height:1.2;quotes:"« " " »"}
+#fk .card q{font-variant-numeric:lining-nums;display:block;font-family:'Cormorant Garamond',Georgia,serif;font-size:24px;line-height:1.2;quotes:"«&nbsp;" "&nbsp;»"}
 #fk .ap q{color:var(--creme);font-weight:600}
 #fk .note{margin:12px 0 0;font-family:'Kalam',cursive;font-size:20px;line-height:1.3;color:var(--vert)}
 #fk ol{margin:0 0 14px;padding:0;list-style:none}
@@ -148,7 +148,7 @@
  <section>
   <h2>La mise en place (une seule fois)</h2>
   <ol>
-   <li><b>01</b> <span><strong>Garde tes originaux à part.</strong> Ils restent là où tu les as reçus&nbsp;: mails, téléchargements, ou un dossier « Originaux » auquel Claude ne touche jamais.<br>Dans NON-CLASSÉE, tu déposes seulement des <strong>copies de travail</strong>.</span></li>
+   <li><b>01</b> <span><strong>Garde tes originaux à part.</strong> Ils restent là où tu les as reçus&nbsp;: mails, téléchargements, ou un dossier «&nbsp;Originaux&nbsp;» auquel Claude ne touche jamais.<br>Dans NON-CLASSÉE, tu déposes seulement des <strong>copies de travail</strong>.</span></li>
    <li><b>02</b> <span><strong>Crée ton dossier Compta</strong> dans Google Drive, avec NON-CLASSÉE et tes dossiers de rangement.</span></li>
    <li><b>03</b> <span><strong>Crée ton tableau de suivi</strong> dans Google Sheets, avec les colonnes : numéro de classement, date, n° de facture, fournisseur, montant, devise, catégorie, lien.</span></li>
    <li><b>04</b> <span><strong>Connecte Google Drive</strong> (et Google Sheets si ton offre le permet) : dans Claude, va dans <strong>Personnaliser › Connecteurs</strong>, sélectionne le connecteur, puis connecte-toi à ton compte Google.</span></li>
@@ -171,8 +171,8 @@
    <div class="moi"><span>1</span><p style="margin:0">Je dépose des copies de mes factures dans <strong>NON-CLASSÉE</strong>.</p></div>
    <div><span>2</span><p style="margin:0">Je colle mon prompt dans Claude, avec le connecteur activé.<em>Il liste les fichiers et attend mon OK.</em></p></div>
    <div><span>3</span><p style="margin:0">Claude lit, renomme et range chaque facture.<em>Ce qui est douteux reste dans NON-CLASSÉE.</em></p></div>
-   <div><span>4</span><p style="margin:0">Il complète mon Google Sheets ou me prépare les lignes à copier-coller, puis me fait le bilan.<em>Avec la liste « À vérifier » et la raison pour chaque fichier.</em></p></div>
-   <div class="moi"><span>5</span><p style="margin:0"><strong>Je vérifie</strong> les montants et les catégories, et je traite la liste « À vérifier ».</p></div>
+   <div><span>4</span><p style="margin:0">Il complète mon Google Sheets ou me prépare les lignes à copier-coller, puis me fait le bilan.<em>Avec la liste «&nbsp;À vérifier&nbsp;» et la raison pour chaque fichier.</em></p></div>
+   <div class="moi"><span>5</span><p style="margin:0"><strong>Je vérifie</strong> les montants et les catégories, et je traite la liste «&nbsp;À vérifier&nbsp;».</p></div>
   </div>
   <p class="astuce">Pas de magie, pas de code&nbsp;: juste une petite routine que je relance quand mon dossier se remplit.</p>
  </section>
@@ -251,7 +251,7 @@ Je vérifie toujours les montants et les catégories derrière toi.</div>
    <li><span class="no">✕</span><div>Les originaux&nbsp;? Ils restent à part. Claude ne travaille que sur des copies.</div></li>
    <li><span class="no">✕</span><div>Supprimer, modifier ou partager une facture&nbsp;? Jamais.</div></li>
    <li><span class="yes">✓</span><div>Les montants et les catégories&nbsp;? Je contrôle derrière.</div></li>
-   <li><span class="yes">✓</span><div>Les données sensibles&nbsp;? Une facture en contient (noms, adresses, montants), et Claude peut lire ce à quoi ton compte Google a accès. Alors je garde mes factures dans un dossier à part, et j'active le connecteur seulement le temps du rangement.</div></li>
+   <li><span class="yes">✓</span><div>Les données sensibles&nbsp;? Une facture en contient (noms, adresses, montants), et Claude peut lire ce à quoi ton compte Google a accès. Alors je garde mes factures dans un dossier à part, et j'active le connecteur seulement le temps du rangement. Et dans mon prompt, il n'a le droit que de ranger, rien d'autre.</div></li>
   </ul>
   <p>Un prompt pose des règles, il ne garantit pas tout.</p>
   <p><strong>Claude fait le rangement. Moi, je garde le contrôle.</strong></p>
