@@ -149,7 +149,7 @@
   <ul class="regles">
    <li><span class="yes">✓</span><div>Tes factures en PDF dans <strong>Google Drive</strong>, de préférence des PDF avec du texte. Un scan flou ou une photo peut être mal lu&nbsp;: Claude doit alors le mettre de côté.</div></li>
    <li><span class="yes">✓</span><div>Claude avec le <strong>connecteur Google Drive</strong>. Il est disponible aussi sur l'offre gratuite. Il permet à Claude de lire tes fichiers, de créer des dossiers et de déplacer des fichiers, en te demandant ton accord.</div></li>
-   <li><span class="yes">✓</span><div>Pour le tableau de suivi&nbsp;: rien à installer. Claude complète le <strong>fichier Excel</strong> et te le donne. Tu remplaces l'ancien dans ton Drive (clic droit › Gérer les versions).</div></li>
+   <li><span class="yes">✓</span><div>Pour le tableau de suivi&nbsp;: rien à installer. Claude crée le <strong>fichier Excel</strong> la première fois, puis le complète, et te le donne à chaque fois. Tu remplaces l'ancien dans ton Drive (clic droit › Gérer les versions).</div></li>
   </ul>
   <p class="astuce">Certaines fonctionnalités dépendent de ton offre et des autorisations accordées&nbsp;: vérifie ce que ton offre Claude permet avant de lancer ton dossier complet.<br><br>Sur l'offre gratuite, le connecteur marche, mais la limite d'utilisation arrive très vite&nbsp;: chez moi, elle est tombée dès le début. Pour un vrai dossier, prévois une offre payante.<br><br>Sur un compte Team ou Entreprise, c'est l'administrateur qui doit d'abord activer les connecteurs.</p>
  </section>
@@ -159,7 +159,7 @@
   <ol>
    <li><b>01</b> <span><strong>Mon conseil&nbsp;: ne dépose que des copies.</strong> Les originaux restent dans tes mails ou là où tu les as reçus.</span></li>
    <li><b>02</b> <span><strong>Crée ton dossier Compta</strong> dans Google Drive, avec NON-CLASSÉE et tes dossiers de rangement.</span></li>
-   <li><b>03</b> <span><strong>Ton tableau de suivi&nbsp;:</strong> télécharge mon modèle Excel plus bas et dépose-le dans ton dossier Compta.</span></li>
+   <li><b>03</b> <span><strong>Ton tableau de suivi&nbsp;:</strong> laisse Claude créer le premier.</span></li>
    <li><b>04</b> <span><strong>Connecte Google Drive</strong> : dans Claude, va dans <strong>Personnaliser › Connecteurs</strong>, sélectionne le connecteur, puis connecte-toi à ton compte Google.</span></li>
    <li><b>05</b> <span><strong>Garde la validation des actions.</strong> Par défaut, Claude te demande ton accord avant de déplacer un fichier. Pour des documents comptables, garde ce réglage&nbsp;: c'est ta sécurité.</span></li>
   </ol>
@@ -199,8 +199,6 @@
    <tr><td>2026-089</td><td>14/10/2026</td><td>C-00412</td><td>Cliente D</td><td>390.00</td><td>EUR</td><td>Vente</td><td>📎 PDF</td><td></td></tr>
   </table></div></div>
   <p class="cap">Sur téléphone, fais glisser le tableau pour voir toutes les colonnes.</p>
-  <a class="dl" href="fichiers/modele-suivi-factures.xlsx" download>⬇ Télécharger mon modèle Excel</a>
-  <p class="cap" style="margin-top:8px">Les lignes d'exemple sont fictives&nbsp;: supprime-les avant ton premier rangement.</p>
  </section>
  <section>
   <h2>À toi de jouer</h2>
@@ -215,7 +213,7 @@
 <b class="fk-h">MON DOSSIER</b>
 - Dossier de dépôt : [Compta › NON-CLASSÉE] (il ne contient que des copies de travail, mes originaux sont ailleurs)
 - Rangement : [Compta › Dépenses › AAAA › AAAA_MM] pour mes factures d'achat, [Compta › Ventes › AAAA › AAAA_MM] pour mes factures de vente
-- Tableau de suivi : [Compta › Suivi factures.xlsx]
+- Tableau de suivi : [Compta › Suivi factures.xlsx] (s'il n'existe pas encore, crée-le et donne-le-moi)
 
 <b class="fk-h">RÈGLES NON NÉGOCIABLES</b>
 - Tu ne supprimes jamais un fichier et tu ne le mets jamais à la corbeille.
@@ -255,7 +253,7 @@ Format : AAAA-NNN AAAA-MM-JJ Fournisseur Montant Devise.pdf
 Déplace chaque facture dans le dossier du mois de sa date, à l'intérieur du dossier de l'année (ex. Dépenses › 2026 › 2026_10). Si le dossier de l'année ou du mois n'existe pas encore, crée-le au bon endroit.
 
 <b class="fk-h">ÉTAPE 5 · TU METS À JOUR LE TABLEAU</b>
-Complète mon fichier Excel de suivi : une ligne par facture rangée : numéro de classement, date, numéro de facture du fournisseur, fournisseur, montant, devise, catégorie (dépense ou vente), « À vérifier ? », lien vers le fichier. N'ajoute jamais une ligne qui existe déjà. Enregistre le fichier dans mon Drive, à l'emplacement indiqué.
+Complète mon fichier Excel de suivi (ou crée le premier) : une ligne par facture rangée : numéro de classement, date, numéro de facture du fournisseur, fournisseur, montant, devise, catégorie (dépense ou vente), « À vérifier ? », lien vers le fichier. N'ajoute jamais une ligne qui existe déjà. Enregistre le fichier dans mon Drive, à l'emplacement indiqué.
 Tu ne peux pas modifier ce fichier dans mon Drive : donne-moi le fichier complété à télécharger, je remplacerai l'ancien moi-même.
 
 <b class="fk-h">ÉTAPE 6 · TU ME FAIS LE BILAN</b>
